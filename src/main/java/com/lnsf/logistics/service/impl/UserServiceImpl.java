@@ -19,7 +19,42 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> getAll() {
-        return userMapper.getAll();
+    public List<User> selectAll() {
+        return userMapper.selectAll();
+    }
+
+    @Override
+    public List<User> selectByPriority(Integer priority) {
+        return userMapper.selectByPriority(priority);
+    }
+
+    @Override
+    public List<User> selectByState(Integer state) {
+        return userMapper.selectByState(state);
+    }
+
+    @Override
+    public User selectById(Integer id) {
+        return userMapper.selectById(id);
+    }
+
+    @Override
+    public User selectByNameAndPassword(String username, String password) {
+        return userMapper.selectByNameAndPassword(username, password);
+    }
+
+    @Override
+    public Boolean insert(User record) {
+        return userMapper.insert(record);
+    }
+
+    @Override
+    public Boolean update(User record) {
+        return userMapper.update(record);
+    }
+
+    @Override
+    public Boolean deleteById(Integer id) {
+        return deleteById(id);
     }
 }

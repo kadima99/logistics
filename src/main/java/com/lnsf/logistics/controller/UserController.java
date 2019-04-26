@@ -17,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/getAll")
-    public List<User> getAll(){
-        return userService.getAll();
+    public List<User> selectAll(){
+        return userService.selectAll();
     }
 }

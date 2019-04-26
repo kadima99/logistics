@@ -6,5 +6,19 @@ import java.util.List;
 
 public interface UserService {
 
-    List<User> getAll();
+    List<User> selectAll();
+
+    List<User> selectByPriority(Integer priority);//通过权限查找
+
+    List<User> selectByState(Integer state);
+
+    User selectById(Integer id);
+
+    User selectByNameAndPassword(String username,String password);
+
+    Boolean insert(User record);
+
+    Boolean update(User record);
+
+    Boolean deleteById(Integer id);
 }
