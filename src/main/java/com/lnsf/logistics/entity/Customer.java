@@ -1,29 +1,20 @@
 package com.lnsf.logistics.entity;
 
-public class User {
+public class Customer {
 
-    private Integer userId;
-    private String password;
+    private Integer customerId;
     private String account;
+    private String password;
     private String name;
     private String phone;
-    private Integer priority;
     private Integer delMark;
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCustomerId() {
+        return customerId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
     }
 
     public String getAccount() {
@@ -32,6 +23,14 @@ public class User {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -50,14 +49,6 @@ public class User {
         this.phone = phone;
     }
 
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
     public Integer getDelMark() {
         return delMark;
     }
@@ -66,25 +57,26 @@ public class User {
         this.delMark = delMark;
     }
 
-    public User(Integer userId, String password, String account, String name, String phone, Integer priority, Integer delMark) {
-        this.userId = userId;
-        this.password = password;
+    public Customer() {
+    }
+
+    public Customer(Integer customerId, String account, String password, String name, String phone, Integer delMark) {
+        this.customerId = customerId;
         this.account = account;
+        this.password = password;
         this.name = name;
         this.phone = phone;
-        this.priority = priority;
         this.delMark = delMark;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", password='" + password + '\'' +
+        return "Customer{" +
+                "customerId=" + customerId +
                 ", account='" + account + '\'' +
+                ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
-                ", priority=" + priority +
                 ", delMark=" + delMark +
                 '}';
     }

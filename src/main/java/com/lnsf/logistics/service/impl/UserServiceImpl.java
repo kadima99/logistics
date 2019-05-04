@@ -39,8 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectByNameAndPassword(String username, String password) {
-        return userMapper.selectByNameAndPassword(username, password);
+    public User selectByName(String name) {
+        return userMapper.selectByName(name);
+    }
+
+    @Override
+    public User selectByAccountAndPassword(String account, String password) {
+        return userMapper.selectByAccountAndPassword(account, password);
     }
 
     @Override
@@ -55,6 +60,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteById(Integer id) {
-        return deleteById(id);
+        return userMapper.deleteById(id);
     }
 }

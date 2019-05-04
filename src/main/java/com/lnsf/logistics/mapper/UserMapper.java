@@ -18,7 +18,9 @@ public interface UserMapper {
 
     User selectById(Integer id);
 
-    User selectByNameAndPassword(String username,String password);
+    User selectByName(String name);
+
+    User selectByAccountAndPassword(String account,String password);
 
     Boolean insert(User record);
 
