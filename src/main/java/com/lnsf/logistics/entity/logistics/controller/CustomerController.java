@@ -20,7 +20,7 @@ public class CustomerController {
         return customerService.selectAll();
     }
 
-    @RequestMapping("/mySqlTest")
+    @RequestMapping("/sqlTest")
     public int test(){
         Customer customer = new Customer();
         customer.setCustomerId(3);
