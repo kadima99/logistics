@@ -10,7 +10,7 @@ public interface CustomerService {
 
     List<Customer> selectByStatus(Integer status);
 
-    Customer selectByNameAndPassword(String name,String password);
+    Customer selectByNameAndPassword(String name, String password);
 
     Customer selectByName(String name);
 

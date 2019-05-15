@@ -16,7 +16,7 @@ public interface UserService {
 
     User selectByName(String name);
 
-    User selectByAccountAndPassword(String account,String password);
+    User selectByAccountAndPassword(String account, String password);
 
     Boolean insert(User record);
 

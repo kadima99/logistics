@@ -8,7 +8,8 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT * FROM user")
+
+    @Select("")
     List<User> selectAll();
 
     @Select("SELECT * FROM user WHERE priority = #{priority}")
@@ -24,7 +25,9 @@ public interface UserMapper {
     User selectByName(String name);
 
     @Select("SELECT * FROM user WHERE account = #{account} AND password = #{password}")
+
     User selectByAccountAndPassword(String account,String password);
+
 
     @Insert("INSERT user VALUES(#{userId},#{account},#{name},#{password},#{phone},#{priority},#{warehouseId},#{status},#{delMark})")
     Boolean insert(User record);
