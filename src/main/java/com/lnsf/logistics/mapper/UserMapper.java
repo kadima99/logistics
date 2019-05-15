@@ -25,7 +25,9 @@ public interface UserMapper {
     User selectByName(String name);
 
     @Select("SELECT * FROM user WHERE account = #{account} AND password = #{password}")
-    User selectByAccountAndPassword(String account, String password);
+
+    User selectByAccountAndPassword(String account,String password);
+
 
     @Insert("INSERT user VALUES(#{userId},#{account},#{name},#{password},#{phone},#{priority},#{warehouseId},#{status},#{delMark})")
     Boolean insert(User record);

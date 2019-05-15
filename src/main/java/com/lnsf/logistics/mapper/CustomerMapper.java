@@ -15,7 +15,8 @@ public interface CustomerMapper {
     List<Customer> selectByStatus(Integer status);
 
     @Select("SELECT * FROM user WHERE name = #{name} AND password = #{password}")
-    Customer selectByNameAndPassword(String name, String password);
+
+    Customer selectByNameAndPassword(String name,String password);
 
     @Select("SELECT * FROM user WHERE name = #{name}")
     Customer selectByName(String name);
