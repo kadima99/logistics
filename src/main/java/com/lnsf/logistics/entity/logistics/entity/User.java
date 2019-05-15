@@ -1,4 +1,4 @@
-package com.lnsf.logistics.entity;
+package com.lnsf.logistics.entity.logistics.entity;
 
 public class User {
 

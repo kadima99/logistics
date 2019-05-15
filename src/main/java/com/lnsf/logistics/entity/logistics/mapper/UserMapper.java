@@ -1,6 +1,6 @@
-package com.lnsf.logistics.mapper;
+package com.lnsf.logistics.entity.logistics.mapper;
 
-import com.lnsf.logistics.entity.User;
+import com.lnsf.logistics.entity.logistics.entity.User;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

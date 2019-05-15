@@ -1,9 +1,9 @@
-package com.lnsf.logistics.service.impl;
+package com.lnsf.logistics.entity.logistics.service.impl;
 
 
-import com.lnsf.logistics.entity.User;
-import com.lnsf.logistics.mapper.UserMapper;
-import com.lnsf.logistics.service.UserService;
+import com.lnsf.logistics.entity.logistics.entity.User;
+import com.lnsf.logistics.entity.logistics.mapper.UserMapper;
+import com.lnsf.logistics.entity.logistics.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

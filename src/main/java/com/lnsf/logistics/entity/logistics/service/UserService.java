@@ -1,6 +1,6 @@
-package com.lnsf.logistics.service;
+package com.lnsf.logistics.entity.logistics.service;
 
-import com.lnsf.logistics.entity.User;
+import com.lnsf.logistics.entity.logistics.entity.User;
 
 import java.util.List;
 

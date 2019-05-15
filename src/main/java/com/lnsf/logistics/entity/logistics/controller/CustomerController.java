@@ -1,7 +1,7 @@
-package com.lnsf.logistics.controller;
+package com.lnsf.logistics.entity.logistics.controller;
 
-import com.lnsf.logistics.entity.Customer;
-import com.lnsf.logistics.service.impl.CustomerServiceImpl;
+import com.lnsf.logistics.entity.logistics.entity.Customer;
+import com.lnsf.logistics.entity.logistics.service.impl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
