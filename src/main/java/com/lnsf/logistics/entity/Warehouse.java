@@ -6,6 +6,9 @@ public class Warehouse {
     private String name;
     private String address;
     private Integer userId;
+    private Integer level;
+    private float maxWeight;
+    private float residueWeight;
     private Integer delMark;
 
     public Integer getWarehouseId() {
@@ -40,6 +43,30 @@ public class Warehouse {
         this.userId = userId;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public float getMaxWeight() {
+        return maxWeight;
+    }
+
+    public void setMaxWeight(float maxWeight) {
+        this.maxWeight = maxWeight;
+    }
+
+    public float getResidueWeight() {
+        return residueWeight;
+    }
+
+    public void setResidueWeight(float residueWeight) {
+        this.residueWeight = residueWeight;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
@@ -51,11 +78,14 @@ public class Warehouse {
     public Warehouse() {
     }
 
-    public Warehouse(Integer warehouseId, String name, String address, Integer userId, Integer delMark) {
+    public Warehouse(Integer warehouseId, String name, String address, Integer userId, Integer level, float maxWeight, float residueWeight, Integer delMark) {
         this.warehouseId = warehouseId;
         this.name = name;
         this.address = address;
         this.userId = userId;
+        this.level = level;
+        this.maxWeight = maxWeight;
+        this.residueWeight = residueWeight;
         this.delMark = delMark;
     }
 
@@ -66,7 +96,11 @@ public class Warehouse {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", userId=" + userId +
+                ", level=" + level +
+                ", maxWeight=" + maxWeight +
+                ", residueWeight=" + residueWeight +
                 ", delMark=" + delMark +
                 '}';
     }
+
 }

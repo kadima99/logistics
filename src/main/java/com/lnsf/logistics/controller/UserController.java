@@ -17,7 +17,15 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/getAll")
-    public List<User> selectAll(){
+    public List<User> selectAll() {
         return userService.selectAll();
+
+    }
+
+    @RequestMapping("/getUserByPriority")
+    public int test(){
+        int id = 5;
+        if (userService.deleteById(id)) return  1;
+        else return 0;
     }
 }

@@ -10,7 +10,7 @@ public interface UserService {
 
     List<User> selectByPriority(Integer priority);//通过权限查找
 
-    List<User> selectByState(Integer state);
+    List<User> selectByStatus(Integer status);
 
     User selectById(Integer id);
 

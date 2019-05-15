@@ -8,6 +8,8 @@ public class User {
     private String name;
     private String phone;
     private Integer priority;
+    private Integer wareHouseId;
+    private Integer Status;
     private Integer delMark;
 
     public Integer getUserId() {
@@ -58,12 +60,32 @@ public class User {
         this.priority = priority;
     }
 
+    public Integer getWareHouseId() {
+        return wareHouseId;
+    }
+
+    public void setWareHouseId(Integer wareHouseId) {
+        this.wareHouseId = wareHouseId;
+    }
+
+    public Integer getStatus() {
+        return Status;
+    }
+
+    public void setStatus(Integer status) {
+        Status = status;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
 
     public void setDelMark(Integer delMark) {
         this.delMark = delMark;
+    }
+
+    public User(){
+
     }
 
     public User(Integer userId, String password, String account, String name, String phone, Integer priority, Integer delMark) {

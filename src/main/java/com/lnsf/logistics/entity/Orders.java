@@ -1,6 +1,7 @@
 package com.lnsf.logistics.entity;
 
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Orders {
@@ -21,7 +22,8 @@ public class Orders {
     private Date createDate;
     private Date confirmDate;
     private Integer lineId;
-    private Integer goodsState;
+    private Time waitTime;
+    private Integer status;
     private Integer delMark;
 
     public Integer getOrderId() {
@@ -160,12 +162,20 @@ public class Orders {
         this.lineId = lineId;
     }
 
-    public Integer getGoodsState() {
-        return goodsState;
+    public Time getWaitTime() {
+        return waitTime;
     }
 
-    public void setGoodsState(Integer goodsState) {
-        this.goodsState = goodsState;
+    public void setWaitTime(Time waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getDelMark() {
@@ -179,7 +189,7 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer goodsState, Integer delMark) {
+    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status, Integer delMark) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.customerName = customerName;
@@ -197,7 +207,7 @@ public class Orders {
         this.createDate = createDate;
         this.confirmDate = confirmDate;
         this.lineId = lineId;
-        this.goodsState = goodsState;
+        this.status = status;
         this.delMark = delMark;
     }
 
@@ -221,7 +231,7 @@ public class Orders {
                 ", createDate=" + createDate +
                 ", confirmDate=" + confirmDate +
                 ", lineId=" + lineId +
-                ", goodsState=" + goodsState +
+                ", status=" + status +
                 ", delMark=" + delMark +
                 '}';
     }

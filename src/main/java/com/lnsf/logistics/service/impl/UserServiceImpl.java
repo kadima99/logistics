@@ -15,7 +15,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    public UserMapper userMapper;
 
 
     @Override
@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> selectByState(Integer state) {
-        return userMapper.selectByState(state);
+    public List<User> selectByStatus(Integer status) {
+        return userMapper.selectByStatus(status);
     }
 
     @Override

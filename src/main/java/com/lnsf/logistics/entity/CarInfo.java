@@ -1,8 +1,12 @@
 package com.lnsf.logistics.entity;
 
+import java.sql.Time;
+
 public class CarInfo {
     private Integer carId;
     private Integer handoverOrderId;
+    private Integer nextWarehouseId;
+    private Time waitTime;
     private Integer delMark;
 
     public Integer getCarId() {
@@ -21,6 +25,22 @@ public class CarInfo {
         this.handoverOrderId = handoverOrderId;
     }
 
+    public Integer getNextWarehouseId() {
+        return nextWarehouseId;
+    }
+
+    public void setNextWarehouseId(Integer nextWarehouseId) {
+        this.nextWarehouseId = nextWarehouseId;
+    }
+
+    public Time getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(Time waitTime) {
+        this.waitTime = waitTime;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
@@ -32,9 +52,11 @@ public class CarInfo {
     public CarInfo() {
     }
 
-    public CarInfo(Integer carId, Integer handoverOrderId, Integer delMark) {
+    public CarInfo(Integer carId, Integer handoverOrderId, Integer nextWarehouseId, Time waitTime, Integer delMark) {
         this.carId = carId;
         this.handoverOrderId = handoverOrderId;
+        this.nextWarehouseId = nextWarehouseId;
+        this.waitTime = waitTime;
         this.delMark = delMark;
     }
 
@@ -43,6 +65,8 @@ public class CarInfo {
         return "CarInfo{" +
                 "carId=" + carId +
                 ", handoverOrderId=" + handoverOrderId +
+                ",nextWarehouseId=" + nextWarehouseId +
+                ",waitTime=" + waitTime +
                 ", delMark=" + delMark +
                 '}';
     }

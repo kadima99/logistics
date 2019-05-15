@@ -5,6 +5,7 @@ public class Car {
     private Integer userId;
     private Float maxWeight;
     private Float residueWeight;
+    private Integer status;
     private Integer delMark;
 
     public Integer getCarId() {
@@ -39,6 +40,14 @@ public class Car {
         this.residueWeight = residueWeight;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
@@ -50,11 +59,12 @@ public class Car {
     public Car() {
     }
 
-    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer delMark) {
+    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer delMark) {
         this.carId = carId;
         this.userId = userId;
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
+        this.status = status;
         this.delMark = delMark;
     }
 
@@ -65,6 +75,7 @@ public class Car {
                 ", userId=" + userId +
                 ", maxWeight=" + maxWeight +
                 ", residueWeight=" + residueWeight +
+                ",status=" + status +
                 ", delMark=" + delMark +
                 '}';
     }

@@ -19,4 +19,17 @@ public class CustomerController {
     List<Customer> selectAll(){
         return customerService.selectAll();
     }
+
+    @RequestMapping("/sqlTest")
+    public int test(){
+        Customer customer = new Customer();
+        customer.setCustomerId(3);
+        customer.setAccount("c01");
+        customer.setDelMark(1);
+        customer.setName("c01");
+        customer.setPassword("123456");
+        customer.setPhone("12345678901");
+        if (customerService.update(customer)) return  1;
+        else return 0;
+    }
 }
