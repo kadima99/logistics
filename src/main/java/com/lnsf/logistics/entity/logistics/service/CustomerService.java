@@ -1,6 +1,6 @@
-package com.lnsf.logistics.service;
+package com.lnsf.logistics.entity.logistics.service;
 
-import com.lnsf.logistics.entity.Customer;
+import com.lnsf.logistics.entity.logistics.entity.Customer;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public interface CustomerService {
 
     List<Customer> selectByStatus(Integer status);
 
-    Customer selectByNameAndPassword(String name,String password);
+    Customer selectByNameAndPassword(String name, String password);
 
     Customer selectByName(String name);
 
