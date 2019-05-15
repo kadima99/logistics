@@ -8,7 +8,8 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT * FROM user")
+
+    @Select("")
     List<User> selectAll();
 
     @Select("SELECT * FROM user WHERE priority = #{priority}")
