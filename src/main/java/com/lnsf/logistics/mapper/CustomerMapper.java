@@ -2,23 +2,30 @@ package com.lnsf.logistics.mapper;
 
 import com.lnsf.logistics.entity.Customer;
 import org.apache.ibatis.annotations.*;
+import org.attoparser.dom.INestableNode;
 
 import java.util.List;
 
 @Mapper
 public interface CustomerMapper {
 
-    @Select("SELECT * FROM customer")
-    List<Customer> selectAll();
+    @Select("SELECT * FROM customer LIMIT #{offset},8")
+    List<Customer> selectAll(Integer offset);
 
-    @Select("SELECT * FROM customer where status = #{status}")
-    List<Customer> selectByStatus(Integer status);
+    @Select("SELECT * FROM customer where status = #{status} LIMIT #{offset},8")
+    List<Customer> selectByStatus(Integer status,Integer offset);
 
-    @Select("SELECT * FROM user WHERE name = #{name} AND password = #{password}")
-    Customer selectByNameAndPassword(String name,String password);
+    @Select("SELECT * FROM customer WHERE name = #{name} LIMIT #{offset},8")
+    List<Customer> selectByName(String name,Integer offset);
 
-    @Select("SELECT * FROM user WHERE name = #{name}")
-    Customer selectByName(String name);
+    @Select("SELECT * FROM customer WHERE account = #{account} AND password = #{password}")
+    Customer selectByAccountAndPassword(String account,String password);
+
+    @Select("SELECT * FROM customer WHERE account = #{account}")
+    Customer selectByAccount(String account);
+
+    @Select("SELECT * FROM customer WHERE customer_id = #{id}")
+    Customer selectById(Integer id);
 
     @Insert("INSERT customer VALUES(#{customerId},#{account},#{name},#{password},#{phone},#{delMark})")
     Boolean insert(Customer record);

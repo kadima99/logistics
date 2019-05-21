@@ -7,7 +7,16 @@ public class Customer {
     private String password;
     private String name;
     private String phone;
+    private Integer status;
     private Integer delMark;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getCustomerId() {
         return customerId;
@@ -60,12 +69,13 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Integer customerId, String account, String password, String name, String phone, Integer delMark) {
+    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status, Integer delMark) {
         this.customerId = customerId;
         this.account = account;
         this.password = password;
         this.name = name;
         this.phone = phone;
+        this.status = status;
         this.delMark = delMark;
     }
 
@@ -77,6 +87,7 @@ public class Customer {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
+                ", status='" + status + '\'' +
                 ", delMark=" + delMark +
                 '}';
     }

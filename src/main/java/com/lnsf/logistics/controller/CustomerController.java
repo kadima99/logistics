@@ -1,7 +1,8 @@
 package com.lnsf.logistics.controller;
 
 import com.lnsf.logistics.entity.Customer;
-import com.lnsf.logistics.service.impl.CustomerServiceImpl;
+import com.lnsf.logistics.service.CustomerService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,15 +14,18 @@ import java.util.List;
 public class CustomerController {
 
     @Autowired
-    private CustomerServiceImpl customerService;
+    private CustomerService customerService;
 
-    @RequestMapping("/all")
-    List<Customer> selectAll(){
-        return customerService.selectAll();
+    @RequestMapping("/getAll")
+    List<Customer> selectAll() {
+        int page = 1;
+        int offset = (page - 1) * 8;
+        return customerService.selectAll(page);
     }
 
+
     @RequestMapping("/sqlTest")
-    public int test(){
+    public int test() {
         Customer customer = new Customer();
         customer.setCustomerId(3);
         customer.setAccount("c01");
@@ -29,7 +33,7 @@ public class CustomerController {
         customer.setName("c01");
         customer.setPassword("123456");
         customer.setPhone("12345678901");
-        if (customerService.update(customer)) return  1;
+        if (customerService.update(customer)) return 1;
         else return 0;
     }
 }

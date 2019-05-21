@@ -8,8 +8,8 @@ public class User {
     private String name;
     private String phone;
     private Integer priority;
-    private Integer wareHouseId;
-    private Integer Status;
+    private Integer warehouseId;
+    private Integer status;
     private Integer delMark;
 
     public Integer getUserId() {
@@ -60,20 +60,20 @@ public class User {
         this.priority = priority;
     }
 
-    public Integer getWareHouseId() {
-        return wareHouseId;
+    public Integer getWarehouseId() {
+        return warehouseId;
     }
 
-    public void setWareHouseId(Integer wareHouseId) {
-        this.wareHouseId = wareHouseId;
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
     }
 
     public Integer getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(Integer status) {
-        Status = status;
+        this.status = status;
     }
 
     public Integer getDelMark() {
@@ -84,17 +84,37 @@ public class User {
         this.delMark = delMark;
     }
 
-    public User(){
+    public User() {
 
     }
 
-    public User(Integer userId, String password, String account, String name, String phone, Integer priority, Integer delMark) {
+    public User(Integer userId, String password, String name, String phone) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public User(String password, String account, String name, String phone, Integer priority, Integer warehouseId, Integer status, Integer delMark) {
+        this.password = password;
+        this.account = account;
+        this.name = name;
+        this.phone = phone;
+        this.priority = priority;
+        this.warehouseId = warehouseId;
+        this.status = status;
+        this.delMark = delMark;
+    }
+
+    public User(Integer userId, String password, String account, String name, String phone, Integer priority, Integer warehouseId, Integer status, Integer delMark) {
         this.userId = userId;
         this.password = password;
         this.account = account;
         this.name = name;
         this.phone = phone;
         this.priority = priority;
+        this.warehouseId = warehouseId;
+        this.status = status;
         this.delMark = delMark;
     }
 
@@ -107,6 +127,8 @@ public class User {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", priority=" + priority +
+                ", warehouseId=" + warehouseId +
+                ", status=" + status +
                 ", delMark=" + delMark +
                 '}';
     }

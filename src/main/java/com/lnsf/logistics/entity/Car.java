@@ -68,6 +68,13 @@ public class Car {
         this.delMark = delMark;
     }
 
+    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer delMark) {
+        this.userId = userId;
+        this.maxWeight = maxWeight;
+        this.residueWeight = residueWeight;
+        this.status = status;
+        this.delMark = delMark;
+    }
     @Override
     public String toString() {
         return "Car{" +

@@ -6,17 +6,21 @@ import java.util.List;
 
 public interface CustomerService {
 
-    List<Customer> selectAll();
+    List<Customer> selectAll(Integer offset);
 
-    List<Customer> selectByStatus(Integer status);
+    List<Customer> selectByStatus(Integer status,Integer offset);
 
-    Customer selectByNameAndPassword(String name,String password);
+    Customer selectByAccountAndPassword(String name,String password);
 
-    Customer selectByName(String name);
+    List<Customer> selectByName(String name,Integer offset);
 
-    Boolean insert(Customer record);
+    Customer selectByAccount(String account);
 
-    Boolean update(Customer record);
+    Customer selectById(Integer id);
 
-    Boolean deleteById(Integer id);
+    String insert(Customer record);
+
+    String update(Customer record);
+
+    String deleteById(Integer id);
 }

@@ -22,7 +22,7 @@ public class Orders {
     private Date createDate;
     private Date confirmDate;
     private Integer lineId;
-    private Time waitTime;
+    private Date waitTime;
     private Integer status;
     private Integer delMark;
 
@@ -162,11 +162,11 @@ public class Orders {
         this.lineId = lineId;
     }
 
-    public Time getWaitTime() {
+    public Date getWaitTime() {
         return waitTime;
     }
 
-    public void setWaitTime(Time waitTime) {
+    public void setWaitTime(Date waitTime) {
         this.waitTime = waitTime;
     }
 
@@ -189,7 +189,7 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status, Integer delMark) {
+    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId,Date waitTime, Integer status, Integer delMark) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.customerName = customerName;
@@ -207,6 +207,7 @@ public class Orders {
         this.createDate = createDate;
         this.confirmDate = confirmDate;
         this.lineId = lineId;
+        this.waitTime = waitTime;
         this.status = status;
         this.delMark = delMark;
     }
@@ -231,6 +232,7 @@ public class Orders {
                 ", createDate=" + createDate +
                 ", confirmDate=" + confirmDate +
                 ", lineId=" + lineId +
+                ", waitTime=" + waitTime +
                 ", status=" + status +
                 ", delMark=" + delMark +
                 '}';

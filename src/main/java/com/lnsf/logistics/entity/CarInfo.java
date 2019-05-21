@@ -1,12 +1,13 @@
 package com.lnsf.logistics.entity;
 
+import java.sql.Date;
 import java.sql.Time;
 
 public class CarInfo {
     private Integer carId;
     private Integer handoverOrderId;
     private Integer nextWarehouseId;
-    private Time waitTime;
+    private Date waitTime;
     private Integer delMark;
 
     public Integer getCarId() {
@@ -33,11 +34,11 @@ public class CarInfo {
         this.nextWarehouseId = nextWarehouseId;
     }
 
-    public Time getWaitTime() {
+    public Date getWaitTime() {
         return waitTime;
     }
 
-    public void setWaitTime(Time waitTime) {
+    public void setWaitTime(Date waitTime) {
         this.waitTime = waitTime;
     }
 
@@ -52,7 +53,7 @@ public class CarInfo {
     public CarInfo() {
     }
 
-    public CarInfo(Integer carId, Integer handoverOrderId, Integer nextWarehouseId, Time waitTime, Integer delMark) {
+    public CarInfo(Integer carId, Integer handoverOrderId, Integer nextWarehouseId, Date waitTime, Integer delMark) {
         this.carId = carId;
         this.handoverOrderId = handoverOrderId;
         this.nextWarehouseId = nextWarehouseId;

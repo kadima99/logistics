@@ -17,37 +17,61 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerMapper customerMapper;
 
     @Override
-    public List<Customer> selectAll() {
-        return customerMapper.selectAll();
+    public List<Customer> selectAll(Integer offset) {
+        return customerMapper.selectAll(offset);
     }
 
     @Override
-    public List<Customer> selectByStatus(Integer status) {
-        return customerMapper.selectByStatus(status);
+    public List<Customer> selectByStatus(Integer status, Integer offset) {
+        return customerMapper.selectByStatus(status, offset);
     }
 
     @Override
-    public Customer selectByNameAndPassword(String name, String password) {
-        return customerMapper.selectByNameAndPassword(name, password);
+    public List<Customer> selectByName(String name, Integer offset) {
+        return customerMapper.selectByName(name, offset);
     }
 
     @Override
-    public Customer selectByName(String name) {
-        return customerMapper.selectByName(name);
+    public Customer selectByAccountAndPassword(String account, String password) {
+        return customerMapper.selectByAccountAndPassword(account, password);
     }
 
     @Override
-    public Boolean insert(Customer record) {
-        return customerMapper.insert(record);
+    public Customer selectByAccount(String account) {
+        return customerMapper.selectByAccount(account);
+    }
+
+
+    @Override
+    public Customer selectById(Integer id) {
+        return customerMapper.selectById(id);
+    }
+
+
+    @Override
+    public String insert(Customer record) {
+        if (selectByAccount(record.getAccount()) != null) {
+            return "该用户已存在！";
+        } else if (customerMapper.insert(record)) {
+            return "插入成功";
+        } else return "插入失败";
     }
 
     @Override
-    public Boolean update(Customer record) {
-        return customerMapper.update(record);
+    public String update(Customer record) {
+             if (customerMapper.update(record)) {
+                return "修改成功";
+            } else return "修改失败";
     }
 
     @Override
-    public Boolean deleteById(Integer id) {
-        return customerMapper.deleteById(id);
+    public String deleteById(Integer id) {
+        if (selectById(id) != null) {
+            if (customerMapper.selectById(id).getDelMark() == 1) {
+                return "该用户已经删除！请勿重复操作";
+            } else if (customerMapper.deleteById(id)) {
+                return "删除成功";
+            } else return "删除失败";
+        } else return "id有误！";
     }
 }
