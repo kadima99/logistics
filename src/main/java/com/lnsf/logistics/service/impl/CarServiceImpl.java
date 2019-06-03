@@ -20,8 +20,7 @@ public class CarServiceImpl implements CarService {
     private CarMapper carMapper;
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private CarInfoService carInfoService;
+
 
     @Override
     public List<Car> selectAll(Integer offset) {
@@ -33,8 +32,8 @@ public class CarServiceImpl implements CarService {
         return carMapper.selectByStatus(status, offset);
     }
 
-    public List<Car> selectByDelMark(Integer delMark,Integer offset) {
-        return carMapper.selectByDelMark(delMark,offset);
+    public List<Car> selectByDelMark(Integer delMark, Integer offset) {
+        return carMapper.selectByDelMark(delMark, offset);
     }
 
     @Override
@@ -46,20 +45,21 @@ public class CarServiceImpl implements CarService {
     public Boolean updateDelMarkById(Integer id) {
         Car car = carMapper.selectById(id);
         car.setDelMark(0);
-        carInfoService.updateDelMarkById(id);
         return carMapper.update(car);
     }
 
     @Override
     public String insert(Car car) {
-        if (userMapper.selectById(car.getUserId()) != null) {
+        if (userMapper.selectById(car.getUserId()) == null) {
+            return "查无此人！";
+        }
+        if (carMapper.selectByUserId(car.getUserId()) != null) {
             return "该司机已经分配车辆了！";
         } else if (car.getMaxWeight() == null) {
             return "车辆最大重量不能为空！";
         } else if (carMapper.insert(car)) {
             CarInfo carInfo = new CarInfo();
             carInfo.setCarId(car.getUserId());
-            carInfoService.insert(carInfo);
             return "插入成功";
         } else return "插入失败";
 
@@ -69,7 +69,9 @@ public class CarServiceImpl implements CarService {
     public String update(Car car) {
         if (carMapper.selectById(car.getCarId()) != null) {
             if (carMapper.selectById(car.getCarId()).getDelMark().equals(0)) {
-                if (userMapper.selectById(car.getUserId()) != null) {
+                if (userMapper.selectById(car.getUserId()) == null) {
+                    return "查无此人！";
+                } else if (carMapper.selectByUserId(car.getUserId()) != null && !carMapper.selectByUserId(car.getUserId()).getCarId().equals(car.getCarId())) {
                     return "该司机已经分配车辆了！";
                 } else if (car.getMaxWeight() == null) {
                     return "车辆最大重量不能为空！";
@@ -92,7 +94,6 @@ public class CarServiceImpl implements CarService {
             } else if (carMapper.selectById(id).getStatus() == 1) {
                 return "请确保该车辆不在工作状态再删除！";
             } else if (carMapper.delete(id)) {
-                carInfoService.delete(id);
                 return "删除成功";
             } else return "删除失败";
         } else return "找不到该车辆！";

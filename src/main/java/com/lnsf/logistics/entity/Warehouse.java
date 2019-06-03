@@ -6,10 +6,11 @@ public class Warehouse {
     private String name;
     private String address;
     private Integer userId;
+    private String area;
     private Integer level;
     private float maxWeight;
     private float residueWeight;
-    private Integer delMark;
+    private Integer status;
 
     public Integer getWarehouseId() {
         return warehouseId;
@@ -43,6 +44,14 @@ public class Warehouse {
         this.userId = userId;
     }
 
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public Integer getLevel() {
         return level;
     }
@@ -67,27 +76,42 @@ public class Warehouse {
         this.residueWeight = residueWeight;
     }
 
-    public Integer getDelMark() {
-        return delMark;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setDelMark(Integer delMark) {
-        this.delMark = delMark;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
+
 
     public Warehouse() {
     }
 
-    public Warehouse(Integer warehouseId, String name, String address, Integer userId, Integer level, float maxWeight, float residueWeight, Integer delMark) {
+    public Warehouse(Integer warehouseId, String name, String address, Integer userId, String area , Integer level, float maxWeight, float residueWeight,Integer status) {
         this.warehouseId = warehouseId;
         this.name = name;
         this.address = address;
         this.userId = userId;
         this.level = level;
+        this.area = area;
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
-        this.delMark = delMark;
+        this.status = status;
     }
+
+
+    public Warehouse(String name, String address, Integer userId, String area , Integer level, float maxWeight, float residueWeight,Integer status) {
+        this.name = name;
+        this.address = address;
+        this.userId = userId;
+        this.level = level;
+        this.area = area;
+        this.maxWeight = maxWeight;
+        this.residueWeight = residueWeight;
+        this.status = status;
+    }
+
 
     @Override
     public String toString() {
@@ -96,10 +120,12 @@ public class Warehouse {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", userId=" + userId +
+                ", area=" + area +'\''+
                 ", level=" + level +
                 ", maxWeight=" + maxWeight +
                 ", residueWeight=" + residueWeight +
-                ", delMark=" + delMark +
+                ", status=" + status +
+
                 '}';
     }
 

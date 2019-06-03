@@ -18,7 +18,7 @@ public interface UserService {
 
     User selectByAccount(String account);
 
-    User selectByAccountAndPassword(String account,String password);
+    String login(String account,String password);
 
     List<User> selectByWarehouseId(Integer warehouseId, Integer offset);
 

@@ -8,7 +8,6 @@ public class Customer {
     private String name;
     private String phone;
     private Integer status;
-    private Integer delMark;
 
     public Integer getStatus() {
         return status;
@@ -58,25 +57,24 @@ public class Customer {
         this.phone = phone;
     }
 
-    public Integer getDelMark() {
-        return delMark;
-    }
-
-    public void setDelMark(Integer delMark) {
-        this.delMark = delMark;
-    }
-
     public Customer() {
     }
 
-    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status, Integer delMark) {
+    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status) {
         this.customerId = customerId;
         this.account = account;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.status = status;
-        this.delMark = delMark;
+    }
+
+    public Customer(String account, String password, String name, String phone, Integer status) {
+        this.account = account;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.status = status;
     }
 
     @Override
@@ -88,7 +86,6 @@ public class Customer {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", status='" + status + '\'' +
-                ", delMark=" + delMark +
                 '}';
     }
 }

@@ -27,10 +27,10 @@ public interface CustomerMapper {
     @Select("SELECT * FROM customer WHERE customer_id = #{id}")
     Customer selectById(Integer id);
 
-    @Insert("INSERT customer VALUES(#{customerId},#{account},#{name},#{password},#{phone},#{delMark})")
+    @Insert("INSERT customer VALUES(#{customerId},#{account},#{name},#{password},#{phone},#{status})")
     Boolean insert(Customer record);
 
-    @Update("UPDATE customer SET account = #{account},name = #{name},password = #{password},phone = #{phone},del_mark = #{delMark} WHERE customer_id = #{customerId}")
+    @Update("UPDATE customer SET account = #{account},name = #{name},password = #{password},phone = #{phone},status = #{status} WHERE customer_id = #{customerId}")
     Boolean update(Customer record);
 
     @Delete("DELETE FROM customer WHERE customer_id = #{id}")

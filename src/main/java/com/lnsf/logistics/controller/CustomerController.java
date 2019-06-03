@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.lnsf.logistics.Enum.CustomerStatus.FORBID;
+import static com.lnsf.logistics.Enum.CustomerStatus.WAS_USING;
+
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -17,23 +20,72 @@ public class CustomerController {
     private CustomerService customerService;
 
     @RequestMapping("/getAll")
-    List<Customer> selectAll() {
+    public List<Customer> selectAll() {
         int page = 1;
         int offset = (page - 1) * 8;
-        return customerService.selectAll(page);
+        return customerService.selectAll(offset);
+    }
+
+    @RequestMapping("/login")
+    public String login(){
+        String account = "text";
+        String password = "123456";
+        return customerService.login(account,password);
+    }
+
+    @RequestMapping("/resetPassword")
+    public Boolean resetPassword(){
+        Integer id = 1;
+        return customerService.resetPassword(id);
+    }
+
+    @RequestMapping("/forbid")
+    public Boolean forbid(){
+        Integer id = 1;
+        return customerService.forbidById(id);
+    }
+
+    @RequestMapping("/recover")
+    public Boolean recover(){
+        Integer id = 1;
+        return customerService.recoverById(id);
+    }
+
+    @RequestMapping("/add")
+    public String add(){
+        String account = "text110";
+        String name = "text110";
+        String password = "123456";
+        String phone = "12345678901";
+        return customerService.insert(new Customer(account,name,password,phone,WAS_USING.getCode()));
+    }
+
+    @RequestMapping("/update")
+    public String update(){
+        Integer id = 1;
+        String account = customerService.selectById(id).getAccount();
+        String name = "44";
+        String password = "123456";
+        String phone = "110";
+        return customerService.update(new Customer(id,account,name,password,phone,1));
+    }
+
+    @RequestMapping("/getByName")
+    public List<Customer> getByName(){
+        String name = "text";
+        Integer page = 1;
+        Integer offset = (page-1) * 8;
+        return customerService.selectByName(name,offset);
+    }
+
+    @RequestMapping("/getByStatus")
+    public List<Customer> getByStatus(){
+        Integer status = 1;
+        Integer page = 1;
+        Integer offset = (page -1)*8;
+        return customerService.selectByStatus(status,offset);
     }
 
 
-    @RequestMapping("/sqlTest")
-    public int test() {
-        Customer customer = new Customer();
-        customer.setCustomerId(3);
-        customer.setAccount("c01");
-        customer.setDelMark(1);
-        customer.setName("c01");
-        customer.setPassword("123456");
-        customer.setPhone("12345678901");
-        if (customerService.update(customer)) return 1;
-        else return 0;
-    }
+
 }

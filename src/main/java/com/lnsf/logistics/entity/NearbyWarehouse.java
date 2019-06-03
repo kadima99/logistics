@@ -7,8 +7,6 @@ public class NearbyWarehouse {
     private Integer nearbyWarehouseId;
     private Integer warehouseId;
     private Float distance;
-    private Time time;
-    private float cost;
     private Integer delMark;
 
     public Integer getId() {
@@ -43,14 +41,6 @@ public class NearbyWarehouse {
         this.distance = distance;
     }
 
-    public float getCost() {
-        return cost;
-    }
-
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
-
     public Integer getDelMark() {
         return delMark;
     }
@@ -62,13 +52,19 @@ public class NearbyWarehouse {
     public NearbyWarehouse() {
     }
 
-    public NearbyWarehouse(Integer id, Integer nearbyWarehouseId, Integer warehouseId, Float distance, Time time, float cost, Integer delMark) {
+    public NearbyWarehouse(Integer id, Integer nearbyWarehouseId, Integer warehouseId, Float distance, Integer delMark) {
         this.id = id;
         this.nearbyWarehouseId = nearbyWarehouseId;
         this.warehouseId = warehouseId;
         this.distance = distance;
-        this.time = time;
-        this.cost = cost;
+        this.delMark = delMark;
+    }
+
+    public NearbyWarehouse(Integer nearbyWarehouseId, Integer warehouseId, Float distance, Integer delMark) {
+
+        this.nearbyWarehouseId = nearbyWarehouseId;
+        this.warehouseId = warehouseId;
+        this.distance = distance;
         this.delMark = delMark;
     }
 
@@ -79,8 +75,6 @@ public class NearbyWarehouse {
                 ", nearbyWarehouseId=" + nearbyWarehouseId +
                 ", warehouseId=" + warehouseId +
                 ", distance=" + distance +
-                ", time=" + time +
-                ", cost=" + cost +
                 ", delMark=" + delMark +
                 '}';
     }

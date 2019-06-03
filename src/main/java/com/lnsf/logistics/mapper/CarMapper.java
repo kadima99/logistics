@@ -21,6 +21,9 @@ public interface CarMapper {
     @Select("SELECT * FROM car WHERE car_id = #{id}")
     Car selectById(Integer id);
 
+    @Select("SELECT * FROM car WHERE user_id = #{id}")
+    Car selectByUserId(Integer id);
+
     @Insert("INSERT car VALUES(#{carId},#{userId},#{maxWeight},#{residueWeight},#{status},#{delMark})")
     Boolean insert(Car car);
 

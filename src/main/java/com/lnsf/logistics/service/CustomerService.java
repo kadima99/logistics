@@ -8,19 +8,23 @@ public interface CustomerService {
 
     List<Customer> selectAll(Integer offset);
 
-    List<Customer> selectByStatus(Integer status,Integer offset);
+    List<Customer> selectByStatus(Integer status, Integer offset);
 
-    Customer selectByAccountAndPassword(String name,String password);
+    String login(String account, String password);
 
-    List<Customer> selectByName(String name,Integer offset);
-
-    Customer selectByAccount(String account);
+    List<Customer> selectByName(String name, Integer offset);
 
     Customer selectById(Integer id);
+
+    Boolean forbidById(Integer id);
+
+    Boolean recoverById(Integer id);
+
+    Boolean resetPassword(Integer id);
 
     String insert(Customer record);
 
     String update(Customer record);
 
-    String deleteById(Integer id);
+    String delete(Integer id);
 }

@@ -22,9 +22,9 @@ public class Orders {
     private Date createDate;
     private Date confirmDate;
     private Integer lineId;
-    private Date waitTime;
     private Integer status;
-    private Integer delMark;
+    private Integer warehouseId;
+    private Integer endWarehouseId;
 
     public Integer getOrderId() {
         return orderId;
@@ -162,14 +162,6 @@ public class Orders {
         this.lineId = lineId;
     }
 
-    public Date getWaitTime() {
-        return waitTime;
-    }
-
-    public void setWaitTime(Date waitTime) {
-        this.waitTime = waitTime;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -178,18 +170,27 @@ public class Orders {
         this.status = status;
     }
 
-    public Integer getDelMark() {
-        return delMark;
+    public Integer getWarehouseId() {
+        return warehouseId;
     }
 
-    public void setDelMark(Integer delMark) {
-        this.delMark = delMark;
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
     }
+
+    public Integer getEndWarehouseId() {
+        return endWarehouseId;
+    }
+
+    public void setEndWarehouseId(Integer endWarehouseId) {
+        this.endWarehouseId = endWarehouseId;
+    }
+
 
     public Orders() {
     }
 
-    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId,Date waitTime, Integer status, Integer delMark) {
+    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status,Integer warehouseId,Integer endWarehouseId) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.customerName = customerName;
@@ -207,10 +208,34 @@ public class Orders {
         this.createDate = createDate;
         this.confirmDate = confirmDate;
         this.lineId = lineId;
-        this.waitTime = waitTime;
         this.status = status;
-        this.delMark = delMark;
+        this.warehouseId = warehouseId;
+        this.endWarehouseId = endWarehouseId;
     }
+
+    public Orders(Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status,Integer warehouseId,Integer endWarehouseId) {
+
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerPhone = customerPhone;
+        this.customerProvince = customerProvince;
+        this.customerCity = customerCity;
+        this.customerAddress = customerAddress;
+        this.receiverName = receiverName;
+        this.receiverPhone = receiverPhone;
+        this.receiverProvince = receiverProvince;
+        this.receiverCity = receiverCity;
+        this.receiverAddress = receiverAddress;
+        this.wareWeight = wareWeight;
+        this.freight = freight;
+        this.createDate = createDate;
+        this.confirmDate = confirmDate;
+        this.lineId = lineId;
+        this.status = status;
+        this.warehouseId = warehouseId;
+        this.endWarehouseId = endWarehouseId;
+    }
+
 
     @Override
     public String toString() {
@@ -232,9 +257,9 @@ public class Orders {
                 ", createDate=" + createDate +
                 ", confirmDate=" + confirmDate +
                 ", lineId=" + lineId +
-                ", waitTime=" + waitTime +
                 ", status=" + status +
-                ", delMark=" + delMark +
+                ", status=" + warehouseId +
+                ", status=" + endWarehouseId +
                 '}';
     }
 }

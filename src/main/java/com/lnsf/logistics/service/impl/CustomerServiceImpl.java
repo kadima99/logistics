@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.lnsf.logistics.Enum.CustomerStatus.FORBID;
+import static com.lnsf.logistics.Enum.CustomerStatus.WAS_USING;
+
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
@@ -32,13 +35,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer selectByAccountAndPassword(String account, String password) {
-        return customerMapper.selectByAccountAndPassword(account, password);
-    }
+    public String login(String account, String password) {
+        if (customerMapper.selectByAccount(account) != null) {
+            if (customerMapper.selectByAccount(account).getStatus().equals(FORBID)) {
+                return "你的账号已经被封禁！请联系客服寻求帮助！";
+            } else if (customerMapper.selectByAccountAndPassword(account, password) != null) {
+                return "登陆成功";
+            } else return "密码错误！";
+        } else return "账户不存在！";
 
-    @Override
-    public Customer selectByAccount(String account) {
-        return customerMapper.selectByAccount(account);
+
     }
 
 
@@ -47,10 +53,30 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.selectById(id);
     }
 
+    @Override
+    public Boolean forbidById(Integer id){
+        Customer customer = customerMapper.selectById(id);
+        customer.setStatus(FORBID.getCode());
+        return customerMapper.update(customer);
+    }
+
+    @Override
+    public Boolean recoverById(Integer id){
+        Customer customer = customerMapper.selectById(id);
+        customer.setStatus(WAS_USING.getCode());
+        return customerMapper.update(customer);
+    }
+
+    @Override
+    public Boolean resetPassword(Integer id ){
+        Customer customer = customerMapper.selectById(id);
+        customer.setPassword("123456");
+        return customerMapper.update(customer);
+    }
 
     @Override
     public String insert(Customer record) {
-        if (selectByAccount(record.getAccount()) != null) {
+        if (customerMapper.selectByAccount(record.getAccount()) != null) {
             return "该用户已存在！";
         } else if (customerMapper.insert(record)) {
             return "插入成功";
@@ -59,17 +85,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String update(Customer record) {
-             if (customerMapper.update(record)) {
-                return "修改成功";
-            } else return "修改失败";
+        if (customerMapper.update(record)) {
+            return "修改成功";
+        } else return "修改失败";
     }
 
     @Override
-    public String deleteById(Integer id) {
+    public String delete(Integer id) {
         if (selectById(id) != null) {
-            if (customerMapper.selectById(id).getDelMark() == 1) {
-                return "该用户已经删除！请勿重复操作";
-            } else if (customerMapper.deleteById(id)) {
+            if (customerMapper.deleteById(id)) {
                 return "删除成功";
             } else return "删除失败";
         } else return "id有误！";

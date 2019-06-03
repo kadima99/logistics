@@ -24,12 +24,13 @@ public class CarController {
     private UserService userService;
 
     @RequestMapping("/getAll")
-    public String getAll() {
+    public String getAll() throws JSONException {
         int page = 1;
         int offset = (page - 1) * 8;
         // return carService.selectAll(offset);
 
         List<Car> lc = carService.selectAll(offset);
+        JSONObject jsonObject1 = new JSONObject();
         JSONArray array = new JSONArray();
         for (int i = 0; i < lc.size(); i++) {
             JSONObject jsonObject = new JSONObject();
@@ -47,7 +48,9 @@ public class CarController {
             }
 
         }
-        return array.toString();
+        jsonObject1.put("date",array);
+        jsonObject1.put("aa",1);
+        return jsonObject1.toString();
 
 
     }

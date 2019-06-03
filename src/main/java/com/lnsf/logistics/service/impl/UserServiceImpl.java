@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.lnsf.logistics.myEnum.UserStatus.WAS_BUSY;
+import static com.lnsf.logistics.Enum.UserStatus.IS_BUSY;
 
 @Service
 @Transactional
@@ -51,8 +51,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectByAccountAndPassword(String account, String password) {
-        return userMapper.selectByAccountAndPassword(account, password);
+    public String login(String account, String password) {
+        if (userMapper.selectByAccount(account) != null) {
+            if (userMapper.selectByAccount(account).getDelMark().equals(0)) {
+                if (userMapper.selectByAccountAndPassword(account, password) != null) {
+                    return "登陆成功";
+                } else return "密码错误！";
+            } else return "该员工已经离职！";
+        } else return "账户不存在！";
     }
 
     @Override
@@ -89,9 +95,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public String deleteById(Integer id) {
         if (selectById(id) != null) {
+            System.out.println(userMapper.selectById(id).getStatus());
+            System.out.println(IS_BUSY.getCode());
             if (userMapper.selectById(id).getDelMark() == 1) {
                 return "该用户已经删除！请勿重复操作";
-            } else if (userMapper.selectById(id).getStatus().equals(WAS_BUSY)) {
+            } else if (userMapper.selectById(id).getStatus().equals(IS_BUSY.getCode())) {
                 return "请确保该员工不再工作中再删除！";
             } else if (userMapper.deleteById(id)) {
                 return "删除成功";
