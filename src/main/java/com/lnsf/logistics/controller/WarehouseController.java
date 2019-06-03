@@ -2,6 +2,9 @@ package com.lnsf.logistics.controller;
 
 import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.service.WarehouseService;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +24,21 @@ public class WarehouseController {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
         return warehouseService.selectAll(offset);
+    }
+
+    @RequestMapping("/getAllBrief")
+    public String getAllBrief() throws JSONException {
+        List<Warehouse> warehouseList = warehouseService.selectAllWarehouse();
+        JSONObject rep = new JSONObject();
+        JSONArray array = new JSONArray();
+        for (int i = 0; i < warehouseList.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+                jsonObject.put("warehouseId", warehouseList.get(i).getWarehouseId());
+                jsonObject.put("name",warehouseList.get(i).getName());
+                array.put(jsonObject);
+        }
+        rep.put("warehouseData",array);
+        return rep.toString();
     }
 
     @RequestMapping("/getByArea")

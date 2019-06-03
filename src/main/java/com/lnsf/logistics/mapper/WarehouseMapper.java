@@ -14,7 +14,7 @@ public interface WarehouseMapper {
     @Select("SELECT * FROM warehouse limit #{offset},8")
     List<Warehouse> selectAll(Integer offset);
 
-    @Select("SELECT * FROM warehouse limit #{offset},8")
+    @Select("SELECT * FROM warehouse")
     List<Warehouse> selectAllWarehouse();
 
     @Select("SELECT * FROM warehouse WHERE area = #{area} limit #{offset},8")

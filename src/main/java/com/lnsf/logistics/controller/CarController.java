@@ -46,7 +46,6 @@ public class CarController {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         jsonObject1.put("date",array);
         jsonObject1.put("aa",1);
