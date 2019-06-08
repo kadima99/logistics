@@ -82,6 +82,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public List<Warehouse> selectByLevel(Integer level) {
+
         return warehouseMapper.selectByLevel(level);
     }
 
