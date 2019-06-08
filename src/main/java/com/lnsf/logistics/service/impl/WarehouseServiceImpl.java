@@ -35,7 +35,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         if (city == null) {
             city = "";
         }
-
         if (!keyword.equals("")) {
             sql += " AND (name like \"%" + keyword + "%\" or warehouse_id like  \"%" + keyword + "%\")";
         }
