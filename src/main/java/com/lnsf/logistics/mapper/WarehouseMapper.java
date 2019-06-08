@@ -20,8 +20,8 @@ public interface WarehouseMapper {
     @Select("SELECT * FROM warehouse")
     List<Warehouse> selectAllWarehouseBrief();
 
-    @Select("SELECT * FROM warehouse WHERE area = #{area} limit #{offset},8")
-    List<Warehouse> selectByArea(String area,Integer offset);
+    @Select("SELECT * FROM warehouse WHERE area = #{area} ")
+    List<Warehouse> selectByArea(String area);
 
     @Select("SELECT * FROM warehouse WHERE level = #{level} ")
     List<Warehouse> selectByLevel(Integer level);

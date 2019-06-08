@@ -12,7 +12,7 @@ public interface WarehouseService {
 
     List<Warehouse> selectAllWarehouseBrief();
 
-    List<Warehouse> selectByArea(String area,Integer offset);
+    List<Warehouse> selectByArea(String area);
 
     List<Warehouse> selectByLevel(Integer level);
 

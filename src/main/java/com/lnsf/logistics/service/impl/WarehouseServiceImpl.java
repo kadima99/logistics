@@ -77,15 +77,13 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseMapper.selectAllWarehouseBrief();
     }
 
-    public List<Warehouse> selectByArea(String area, Integer offset) {
-        return warehouseMapper.selectByArea(area, offset);
+    public List<Warehouse> selectByArea(String area) {
+        return warehouseMapper.selectByArea(area);
     }
 
     public List<Warehouse> selectByLevel(Integer level) {
-
         return warehouseMapper.selectByLevel(level);
     }
-
 
     public Warehouse selectById(Integer id) {
         return warehouseMapper.selectById(id);
