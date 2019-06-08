@@ -11,20 +11,20 @@ import java.util.List;
 @Mapper
 public interface WarehouseMapper {
 
-    @Select("SELECT * FROM warehouse limit #{offset},8")
-    List<Warehouse> selectAll(Integer offset);
+    @Select("${_parameter}")
+    List<Warehouse> selectAll(String sql);
+
+    @Select("${_parameter}")
+    Integer selectAllCountPage(String sql);
 
     @Select("SELECT * FROM warehouse")
-    List<Warehouse> selectAllWarehouse();
+    List<Warehouse> selectAllWarehouseBrief();
 
     @Select("SELECT * FROM warehouse WHERE area = #{area} limit #{offset},8")
     List<Warehouse> selectByArea(String area,Integer offset);
 
-    @Select("SELECT * FROM warehouse WHERE level = #{level} limit #{offset},8")
-    List<Warehouse> selectByLevel(Integer level,Integer offset);
-
-    @Select("SELECT * FROM warehouse WHERE status = #{status} limit #{offset},8")
-    List<Warehouse> selectByStatus(Integer status,Integer offset);
+    @Select("SELECT * FROM warehouse WHERE level = #{level} ")
+    List<Warehouse> selectByLevel(Integer level);
 
     @Select("SELECT * FROM warehouse WHERE warehouse_id = #{id}")
     Warehouse selectById(Integer id);

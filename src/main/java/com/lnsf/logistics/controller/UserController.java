@@ -4,6 +4,8 @@ package com.lnsf.logistics.controller;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.lnsf.logistics.entity.User;
 import com.lnsf.logistics.service.UserService;
+import com.lnsf.logistics.service.WarehouseService;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lnsf.logistics.Enum.UserStatus.NO_BUSY;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -29,28 +33,163 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private WarehouseService warehouseService;
 
-    @RequestMapping(value = "/getAll", method = GET)
-    public String getAll(@RequestParam("page") String rePage , HttpServletRequest req ,
-                         HttpServletResponse rep ) throws JSONException {
-//        ,@RequestParam("keyword") String reKeyword,@RequestParam("priority") Integer rePriority,@RequestParam("warehouseValue") String reWarehouseValue
-        int page = Integer.parseInt(rePage);
-        int offset = (page - 1) * 8;
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("userDate", userService.selectAll(offset));
-
-        while (userService.selectAll(offset).size() != 0) {
-            System.out.println("stop");
-            page++;
-            offset = (page - 1) * 8;
-        }
-        int totalPage = page;
-        jsonObject.put("totalPage", totalPage);
-        return jsonObject.toString();
+    @RequestMapping(value = "/getAll")
+    public Map<String, Object> getAll(Integer page, String keyword, Integer priority, Integer warehouseId) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> user = userService.selectAll(0, keyword, priority, warehouseId, (page - 1) * 8);
+        map.put("userData", user);
+        double totalPage = Math.ceil(userService.selectAllCountPage(0, keyword, priority, warehouseId).doubleValue() / 8.0);
+        map.put("totalPage", totalPage);
+        return map;
     }
 
-//    @RequestMapping("/getByPriority")
+
+    @RequestMapping(value = "/getAllHistory")
+    public Map<String, Object> getAllHistory(Integer page, String keyword, Integer priority, Integer warehouseId) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<User> user = userService.selectAll(0, keyword, priority, warehouseId, (page - 1) * 8);
+        map.put("userData", user);
+        double totalPage = Math.ceil(userService.selectAllCountPage(1, keyword, priority, warehouseId).doubleValue() / 8.0);
+        map.put("totalPage", totalPage);
+        return map;
+    }
+
+    @RequestMapping(value = "/login")
+    public Map<String, Object> login(String account, String password, HttpServletRequest request) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        User user = userService.login(account, password);
+        if (user != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            map.put("username", user.getName());
+            map.put("auth", user.getPriority());
+        }
+        return map;
+//            String result = userService.selectByAccount(account).getName().concat(userService.selectByAccount(account).getPriority().toString());
+
+    }
+
+    @RequestMapping(value = "/logout")
+    public Map<String, Object> logout(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null) {
+            session.removeAttribute("user");
+            map.put("result", true);
+        } else map.put("result", false);
+
+        return map;
+    }
+
+    @RequestMapping(value = "/resetPassword", method = POST)
+    public Map<String, Object> resetPassword(@RequestParam("userId") List<Long> userId, HttpServletRequest request) throws JSONException {
+        HttpSession session = request.getSession();
+        User loginUser = (User) session.getAttribute("user");
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (loginUser != null) {
+            for (int i = 0; i < userId.size(); i++) {
+                Integer id = userId.get(i).intValue();
+                User user = userService.selectById(id);
+                user.setPassword("123456");
+                if (userService.update(user).equals("修改成功")) {
+                    map.put("result", true);
+                } else map.put("result", false);
+            }
+        }
+        return map;
+    }
+
+    @RequestMapping("/getAccount")
+    public User getAccount(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        return user;
+    }
+
+    @RequestMapping("/updatePassword")
+    public Map<String, Object> updatePassword(Integer userId, String currentPassword, String password, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        User loginUser = (User) session.getAttribute("user");
+        if (loginUser != null) {
+            if (currentPassword.equals(loginUser.getPassword())) {
+                loginUser.setPassword(password);
+                if (userService.update(loginUser).equals("修改成功")) {
+                    map.put("result", true);
+                    session.setAttribute("user", loginUser);
+                } else map.put("result", userService.update(loginUser));
+            } else {
+                map.put("result", "原有密码不正确！");
+            }
+        }
+
+        return map;
+    }
+
+    @RequestMapping("/recover")
+    public Map<String, Object> recover(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (session != null) {
+            User loginUser = (User) session.getAttribute("user");
+            Integer id = loginUser.getUserId();
+            if (userService.updateDelMarkById(id)) {
+                map.put("result", true);
+            }
+        } else map.put("result", null);
+        return map;
+    }
+
+    @RequestMapping("/add")
+    public Map<String, Object> add(String name, String phone, Integer warehouseId, Integer role, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        User loginUser = (User) session.getAttribute("user");
+        if (loginUser != null) {
+            Integer count = userService.selectByWarehouseIdCountPage(warehouseId) + 1;
+            String account = warehouseId.toString() + count.toString();  //account生成规则 仓库名 + 该仓库第几个员工
+            User user = new User(account, "123456", name, phone, role, warehouseId, NO_BUSY.getCode(), 0);
+            if (userService.insert(user).equals("插入成功")) {
+                map.put("result", true);
+            } else map.put("result", userService.insert(user));
+
+        }
+        return map;
+    }
+
+    @RequestMapping("/update")
+    public Map<String, Object> update(Integer userId, String name, String phone, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        User loginUser = (User) session.getAttribute("user");
+        if (loginUser != null) {
+            loginUser.setName(name);
+            loginUser.setPhone(phone);
+            if (userService.update(loginUser).equals("修改成功")) {
+                map.put("result", true);
+            } else map.put("result", userService.update(loginUser));
+        }
+        return map;
+    }
+
+    @RequestMapping("/delete")
+    public Map<String, Object> delete(@RequestParam("userId") List<Long> userId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        User loginUser = (User) session.getAttribute("user");
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < userId.size(); i++) {
+            Integer id = userId.get(i).intValue();
+            if (userService.deleteById(id).equals("删除成功")) {
+                map.put("result", true);
+            } else map.put("result", userService.deleteById(id));
+        }
+        return map;
+    }
+
+    //    @RequestMapping("/getByPriority")
 //    public List<User> getUserByPriority() {
 //        int page = 1;
 //        int offset = (page - 1) * 8;
@@ -81,79 +220,5 @@ public class UserController {
 //    }
 //@RequestParam(value = "username") String account,@RequestParam(value = "password") String password
 
-    @RequestMapping(value = "/login",method = POST)
-    public String login(String username,String password,HttpServletRequest request)  throws JSONException {
-        System.out.println("1");
-        System.out.println(username+password);
-//        String account = requestJson.getString("username");
-//        String password = requestJson.getString("password");
-//        System.out.println(account);
-//        System.out.println(password);
-//        if (userService.login(account, password).equals("登录成功")) {
-//            String result = userService.selectByAccount(account).getName().toString().concat(userService.selectByAccount(account).getPriority().toString());
-//            return result;
-//        } else return userService.login(account, password);
-        return "1";
-    }
-
-    @RequestMapping("/getByWarehouseId")
-    public List<User> getUserByWarehouseId() {
-        int page = 1;
-        int offset = (page - 1) * 8;
-        int warehouseId = 2;
-        return userService.selectByWarehouseId(warehouseId, offset);
-
-    }
-
-    @RequestMapping("/resetPassword")
-    public Boolean resetPassword() {
-        int id = 5;
-        User user = userService.selectById(id);
-        user.setPassword("123456");
-        System.out.println(user);
-        if (userService.update(user).equals("修改成功")) {
-            return true;
-        } else return false;
-
-    }
-
-    @RequestMapping("/recover")
-    public Boolean recover() {
-        int id = 7;
-        return userService.updateDelMarkById(id);
-    }
-
-    @RequestMapping("/add")
-    public String add() {
-        String account = "text";
-        String name = "mytext";
-        String password = "text";
-        String phone = "10086";
-        Integer priority = 1;
-        Integer warehouseId = 2;
-        Integer status = 3;
-        Integer delMark = 1;
-        return userService.insert(new User(account, password, name, phone, priority, warehouseId, status, delMark));
-    }
-
-    @RequestMapping("/update")
-    public String update() {
-        Integer id = 19;
-        String account = userService.selectById(id).getAccount();
-        String name = "mytext2";
-        String password = "text";
-        String phone = "10086";
-        Integer priority = 1;
-        Integer warehouseId = 2;
-        Integer status = 3;
-        Integer delMark = 0;
-        return userService.update(new User(id, account, password, name, phone, priority, warehouseId, status, delMark));
-    }
-
-    @RequestMapping("/delete")
-    public String delete() {
-        int id = 5;
-        return userService.deleteById(id);
-    }
 
 }

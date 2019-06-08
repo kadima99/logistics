@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface WarehouseService {
 
-    List<Warehouse> selectAll(Integer offset);
+    List<Warehouse> selectAll(String keyword, String city,Integer offset);
 
-    List<Warehouse> selectAllWarehouse();
+    Integer selectAllCountPage(String keyword, String city);
+
+    List<Warehouse> selectAllWarehouseBrief();
 
     List<Warehouse> selectByArea(String area,Integer offset);
 
-    List<Warehouse> selectByLevel(Integer level,Integer offset);
-
-    List<Warehouse> selectByStatus(Integer status,Integer offset);
+    List<Warehouse> selectByLevel(Integer level);
 
     Warehouse selectById(Integer id);
 

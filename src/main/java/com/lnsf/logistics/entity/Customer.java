@@ -8,12 +8,21 @@ public class Customer {
     private String name;
     private String phone;
     private Integer status;
+    private Integer delMark;
 
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getDelMark() {
+        return status;
+    }
+
+    public void setDelMark(Integer status) {
         this.status = status;
     }
 
@@ -60,7 +69,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status) {
+    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status,Integer delMark) {
         this.customerId = customerId;
         this.account = account;
         this.password = password;
@@ -69,7 +78,7 @@ public class Customer {
         this.status = status;
     }
 
-    public Customer(String account, String password, String name, String phone, Integer status) {
+    public Customer(String account, String password, String name, String phone, Integer status,Integer delMark) {
         this.account = account;
         this.password = password;
         this.name = name;
@@ -86,6 +95,8 @@ public class Customer {
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", status='" + status + '\'' +
+                ", status='" + delMark + '\'' +
+
                 '}';
     }
 }

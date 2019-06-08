@@ -10,8 +10,8 @@ public interface UserMapper {
 
     //mybatis.configuration.mapUnderscoreToCamelCase=true 自动转换下划线成大写
 
-    @Select("SELECT * FROM user LIMIT #{offset},8")
-    List<User> selectAll(Integer offset);
+    @Select("${_parameter}")
+    List<User> selectAll(String sql);
 
     @Select("SELECT * FROM user WHERE priority = #{priority} LIMIT #{offset},8")
     List<User> selectByPriority(Integer priority, Integer offset);//通过权限查找
@@ -24,6 +24,23 @@ public interface UserMapper {
 
     @Select("SELECT * FROM user WHERE name = #{name} LIMIT #{offset},8")
     List<User> selectByName(String name, Integer offset);
+
+    @Select("${_parameter}")
+    Integer selectAllCountPage(String sql);
+
+    @Select("SELECT count(user_id) FROM user WHERE priority = #{priority} ")
+    Integer selectByPriorityCountPage(Integer priority);//通过权限查找
+
+    @Select("SELECT count(user_id) FROM user WHERE status = #{status} ")
+    Integer selectByStatusCountPage(Integer status);
+
+    @Select("SELECT count(user_id) FROM user WHERE warehouse_id = #{warehouseId} ")
+    Integer selectByWarehouseIdCountPage(Integer warehouseId);
+
+    @Select("SELECT count(user_id) FROM user WHERE name = #{name} ")
+    Integer selectByNameCountPage(String name);
+
+
 
     @Select("SELECT * FROM user WHERE user_id = #{id}")
     User selectById(Integer id);

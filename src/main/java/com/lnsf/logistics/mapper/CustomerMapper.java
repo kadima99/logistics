@@ -9,8 +9,11 @@ import java.util.List;
 @Mapper
 public interface CustomerMapper {
 
-    @Select("SELECT * FROM customer LIMIT #{offset},8")
-    List<Customer> selectAll(Integer offset);
+    @Select("${_parameter}")
+    List<Customer> selectAll(String sql);
+
+    @Select("${_parameter}")
+    Integer selectAllCountPage(String sql);
 
     @Select("SELECT * FROM customer where status = #{status} LIMIT #{offset},8")
     List<Customer> selectByStatus(Integer status,Integer offset);

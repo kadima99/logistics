@@ -1,7 +1,7 @@
 package com.lnsf.logistics.Enum;
 
 public enum CustomerStatus {
-    WAS_USING("使用中",1),FORBID("封禁中",0);
+    WAS_USING("使用中",0),FORBID("封禁中",1);
 
 
     private String status;

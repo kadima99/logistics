@@ -6,21 +6,27 @@ import java.util.List;
 
 public interface UserService {
 
-    List<User> selectAll(Integer offset);
+    List<User> selectAll(Integer delMark,String keyword,Integer priority,Integer warehouseId,Integer offset);
 
     List<User> selectByPriority(Integer priority,Integer offset);//通过权限查找
 
     List<User> selectByStatus(Integer status,Integer offset);
 
-    User selectById(Integer id);
+    List<User> selectByWarehouseId(Integer warehouseId, Integer offset);
 
     List<User> selectByName(String name,Integer offset);
 
+    Integer selectAllCountPage(Integer delMark,String keyword,Integer priority,Integer warehouseId);
+
+    Integer selectByWarehouseIdCountPage(Integer warehouseId);
+
+    Integer selectByStatusCountPage(Integer status);
+
+    User selectById(Integer id);
+
     User selectByAccount(String account);
 
-    String login(String account,String password);
-
-    List<User> selectByWarehouseId(Integer warehouseId, Integer offset);
+    User login(String account,String password);
 
     Boolean updateDelMarkById (Integer id);
 

@@ -95,7 +95,7 @@ public class User {
         this.phone = phone;
     }
 
-    public User(String password, String account, String name, String phone, Integer priority, Integer warehouseId, Integer status, Integer delMark) {
+    public User(String account,String password,  String name, String phone, Integer priority, Integer warehouseId, Integer status, Integer delMark) {
         this.password = password;
         this.account = account;
         this.name = name;

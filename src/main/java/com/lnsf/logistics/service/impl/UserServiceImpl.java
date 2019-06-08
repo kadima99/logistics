@@ -21,8 +21,22 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> selectAll(Integer offset) {
-        return userMapper.selectAll(offset);
+    public List<User> selectAll(Integer delMark, String keyword, Integer priority, Integer warehouseId, Integer offset) {
+        String sql = "SELECT * FROM user where del_mark = " + delMark + " AND priority != 1";
+        System.out.println(warehouseId);
+        if (!keyword.equals("")) {
+            sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
+        }
+        if (priority != null) {
+            sql += " AND priority = " + priority;
+        }
+        if (warehouseId != null) {
+            sql += " AND warehouse_id = " + warehouseId;
+        }
+        if (offset != null) {
+            sql += " LIMIT " + offset + ",8";
+        }
+        return userMapper.selectAll(sql);
     }
 
     @Override
@@ -46,19 +60,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Integer selectAllCountPage(Integer delMark, String keyword, Integer priority, Integer warehouseId) {
+        String sql = "SELECT count(user_id) FROM user where del_mark = " + delMark;
+        if (!keyword.equals("")) {
+            sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
+        }
+        if (priority != null) {
+            sql += " AND priority = " + priority;
+        }
+        if (warehouseId != null) {
+            sql += " AND warehouse_id = " + warehouseId;
+        }
+        return userMapper.selectAllCountPage(sql);
+    }
+
+    @Override
+    public Integer selectByWarehouseIdCountPage(Integer warehouseId) {
+        return userMapper.selectByWarehouseIdCountPage(warehouseId);
+    }
+
+    @Override
+    public Integer selectByStatusCountPage(Integer status) {
+        return userMapper.selectByStatusCountPage(status);
+    }
+
+
+    @Override
     public User selectById(Integer id) {
         return userMapper.selectById(id);
     }
 
     @Override
-    public String login(String account, String password) {
-        if (userMapper.selectByAccount(account) != null) {
-            if (userMapper.selectByAccount(account).getDelMark().equals(0)) {
-                if (userMapper.selectByAccountAndPassword(account, password) != null) {
-                    return "登陆成功";
-                } else return "密码错误！";
-            } else return "该员工已经离职！";
-        } else return "账户不存在！";
+    public User login(String account, String password) {
+        return userMapper.selectByAccountAndPassword(account, password);
     }
 
     @Override
@@ -95,8 +129,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public String deleteById(Integer id) {
         if (selectById(id) != null) {
-            System.out.println(userMapper.selectById(id).getStatus());
-            System.out.println(IS_BUSY.getCode());
             if (userMapper.selectById(id).getDelMark() == 1) {
                 return "该用户已经删除！请勿重复操作";
             } else if (userMapper.selectById(id).getStatus().equals(IS_BUSY.getCode())) {

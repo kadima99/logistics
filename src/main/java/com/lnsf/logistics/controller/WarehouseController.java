@@ -10,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/warehouse")
@@ -20,92 +23,97 @@ public class WarehouseController {
     private WarehouseService warehouseService;
 
     @RequestMapping("/getAll")
-    public List<Warehouse> getAll() {
-        Integer page = 1;
-        Integer offset = (page - 1) * 8;
-        return warehouseService.selectAll(offset);
+    public Map<String, Object> getAll(Integer page, String keyword, String city, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<Warehouse> warehouse = warehouseService.selectAll(keyword, city, (page - 1) * 8);
+        map.put("warehouseData", warehouse);
+        double totalPage = Math.ceil(warehouseService.selectAllCountPage(keyword, city) / 8.0);
+        map.put("totalPage", totalPage);
+        return map;
     }
 
     @RequestMapping("/getAllBrief")
     public String getAllBrief() throws JSONException {
-        List<Warehouse> warehouseList = warehouseService.selectAllWarehouse();
-        JSONObject rep = new JSONObject();
+        List<Warehouse> warehouseList = warehouseService.selectAllWarehouseBrief();
         JSONArray array = new JSONArray();
         for (int i = 0; i < warehouseList.size(); i++) {
             JSONObject jsonObject = new JSONObject();
-                jsonObject.put("warehouseId", warehouseList.get(i).getWarehouseId());
-                jsonObject.put("name",warehouseList.get(i).getName());
-                array.put(jsonObject);
+            jsonObject.put("warehouseId", warehouseList.get(i).getWarehouseId());
+            jsonObject.put("name", warehouseList.get(i).getName());
+            array.put(jsonObject);
         }
-        rep.put("warehouseData",array);
-        return rep.toString();
+        return array.toString();
     }
 
-    @RequestMapping("/getByArea")
-    public List<Warehouse> getByArea() {
-        Integer page = 1;
-        Integer offset = (page - 1) * 8;
-        String area = "北京";
-        return warehouseService.selectByArea(area, offset);
-    }
-
-    @RequestMapping("/getByLevel")
-    public List<Warehouse> getByLevel() {
-        Integer page = 1;
-        Integer offset = (page - 1) * 8;
-        Integer level = 1;
-        return warehouseService.selectByLevel(level, offset);
-    }
-
-    @RequestMapping("/getByStatus")
-    public List<Warehouse> getByStatus() {
-        Integer page = 1;
-        Integer offset = (page - 1) * 8;
-        Integer status = 1;
-        return warehouseService.selectByStatus(status, offset);
-    }
-
-    @RequestMapping("/getById")
-    public Warehouse getById() {
-        Integer id = 1;
-        return warehouseService.selectById(id);
-    }
-
-    @RequestMapping("/getByUserId")
-    public Warehouse getByUserId() {
-        Integer id = 2;
-        return warehouseService.selectByUserId(id);
-    }
-
-    @RequestMapping("/getByLevelAndArea")
-    public Warehouse getByLevelAndArea() {
-        String area = "北京";
-        Integer level = 1;
-        return warehouseService.selectByAreaAndLevel(area, level);
-    }
 
     @RequestMapping("/add")
-    public String add() {
-        String name = "黑龙江一库";
-        String address = "黑龙江不知道在那里";
-        Integer userId = 4;
-        String area = "东北";
-        Integer level = 5;
-        Float maxWeight = 1000.0f;
-        Float residueWeight = 0f;
-        Integer status = 0;
-        return warehouseService.insert(new Warehouse(name,address,userId,area,level,maxWeight,residueWeight,status));
+    public Map<String, Object> add(String name, Integer userId, Integer level, Float maxWeight, String address) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Warehouse warehouse = new Warehouse(name, address, userId, address, level, maxWeight, 0f, 0);
+        if (warehouseService.insert(warehouse).equals("插入成功")) {
+            map.put("result", true);
+        } else map.put("result", warehouseService.insert(warehouse));
+        return map;
 
     }
 
     @RequestMapping("/update")
-    public String update(){
-        Integer id = 3;
-        Warehouse warehouse = warehouseService.selectById(id);
-        String name = "黑龙江二库";
+    public Map<String, Object> update(String name, Integer userId, Integer level, Float maxWeight, String address){
+        Map<String, Object> map = new HashMap<String, Object>();
+        Warehouse warehouse = warehouseService.selectById(userId);
         warehouse.setName(name);
-        return warehouseService.update(warehouse);
+        warehouse.setLevel(level);
+        warehouse.setMaxWeight(maxWeight);
+        warehouse.setAddress(address);
+        if (warehouseService.update(warehouse).equals("更新成功")){
+            map.put("result",true);
+        }else map.put("result",warehouseService.update(warehouse));
+        return map;
 
     }
+
+    //    @RequestMapping("/getByArea")
+//    public List<Warehouse> getByArea() {
+//        Integer page = 1;
+//        Integer offset = (page - 1) * 8;
+//        String area = "北京";
+//        return warehouseService.selectByArea(area, offset);
+//    }
+//
+//    @RequestMapping("/getByLevel")
+//    public List<Warehouse> getByLevel() {
+//        Integer page = 1;
+//        Integer offset = (page - 1) * 8;
+//        Integer level = 1;
+//        return warehouseService.selectByLevel(level, offset);
+//    }
+//
+//    @RequestMapping("/getByStatus")
+//    public List<Warehouse> getByStatus() {
+//        Integer page = 1;
+//        Integer offset = (page - 1) * 8;
+//        Integer status = 1;
+//        return warehouseService.selectByStatus(status, offset);
+//    }
+//
+//    @RequestMapping("/getById")
+//    public Warehouse getById() {
+//        Integer id = 1;
+//        return warehouseService.selectById(id);
+//    }
+//
+//    @RequestMapping("/getByUserId")
+//    public Warehouse getByUserId() {
+//        Integer id = 2;
+//        return warehouseService.selectByUserId(id);
+//    }
+//
+//    @RequestMapping("/getByLevelAndArea")
+//    public Warehouse getByLevelAndArea() {
+//        String area = "北京";
+//        Integer level = 1;
+//        return warehouseService.selectByAreaAndLevel(area, level);
+//    }
+
 
 }

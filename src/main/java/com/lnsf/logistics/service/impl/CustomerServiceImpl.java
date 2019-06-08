@@ -20,8 +20,39 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerMapper customerMapper;
 
     @Override
-    public List<Customer> selectAll(Integer offset) {
-        return customerMapper.selectAll(offset);
+    public List<Customer> selectAll(Integer delMark,String keyword,Integer status,Integer offset) {
+        String sql ="SELECT * FROM customer WHERE del_mark= " + delMark;
+        if (keyword == null){
+            keyword = "";
+        }
+
+        if (!keyword.equals("")){
+            sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
+        }
+        if (status != null){
+            sql += " AND status = " + status;
+        }
+        if (offset != null){
+            sql += " LIMIT " + offset + ",8";
+        }
+        return customerMapper.selectAll(sql);
+    }
+
+    @Override
+    public Integer selectAllCountPage(Integer delMark,String keyword,Integer status){
+        String sql ="SELECT count(customer_id) FROM customer WHERE del_mark= " + delMark;
+        if (keyword == null){
+            keyword = "";
+        }
+
+        if (!keyword.equals("")){
+            sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
+        }
+        if (status != null){
+            sql += " AND status = " + status;
+        }
+        return customerMapper.selectAllCountPage(sql);
+
     }
 
     @Override

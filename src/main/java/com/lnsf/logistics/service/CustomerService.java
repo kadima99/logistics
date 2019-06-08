@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface CustomerService {
 
-    List<Customer> selectAll(Integer offset);
+    List<Customer> selectAll(Integer delMark,String keyword,Integer status,Integer offset);
+
+    Integer selectAllCountPage(Integer delMark,String keyword,Integer status);
 
     List<Customer> selectByStatus(Integer status, Integer offset);
 
