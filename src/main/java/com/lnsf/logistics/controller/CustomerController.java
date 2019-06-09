@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.lnsf.logistics.Enum.CustomerStatus.FORBID;
-import static com.lnsf.logistics.Enum.CustomerStatus.WAS_USING;
+import static com.lnsf.logistics.Enum.CustomerStatus.*;
 
 @RestController
 @RequestMapping("/customer")
@@ -22,23 +23,30 @@ public class CustomerController {
     private CustomerService customerService;
 
     @RequestMapping("/getAll")
-    public Map<String, Object> selectAll(String keyword, Integer status, Integer page) {
+    public Map<String, Object> selectAll(String keyword, Integer status, Integer page,HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        List<Customer> customer = customerService.selectAll(0, keyword, status, (page - 1) * 8);
-        map.put("customerData", customer);
-        double totalPage = Math.ceil(customerService.selectAllCountPage(0, keyword, status) / 8.0);
-        map.put("totalPage", totalPage);
+        if (session.getAttribute("customer") != null) {
+            List<Customer> customer = customerService.selectAll(0, keyword, status, (page - 1) * 8);
+            map.put("customerData", customer);
+            double totalPage = Math.ceil(customerService.selectAllCountPage(0, keyword, status) / 8.0);
+            map.put("totalPage", totalPage);
+        }
         return map;
     }
 
 
     @RequestMapping("/getAllHistory")
-    public Map<String, Object> getAllHistory(String keyword, Integer status, Integer page) {
+    public Map<String, Object> getAllHistory(String keyword, Integer status, Integer page,HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        List<Customer> customer = customerService.selectAll(1, keyword, status, (page - 1) * 8);
-        map.put("customerData", customer);
-        double totalPage = Math.ceil(customerService.selectAllCountPage(1, keyword, status) / 8.0);
-        map.put("totalPage", totalPage);
+        if (session.getAttribute("customer") != null){
+            List<Customer> customer = customerService.selectAll(1, keyword, status, (page - 1) * 8);
+            map.put("customerData", customer);
+            double totalPage = Math.ceil(customerService.selectAllCountPage(1, keyword, status) / 8.0);
+            map.put("totalPage", totalPage);
+        }
+
         return map;
     }
 
@@ -67,13 +75,13 @@ public class CustomerController {
         return customerService.recoverById(id);
     }
 
-    @RequestMapping("/add")
+    @RequestMapping("/register")
     public String add() {
         String account = "text110";
         String name = "text110";
         String password = "123456";
         String phone = "12345678901";
-        return customerService.insert(new Customer(account, name, password, phone, WAS_USING.getCode(),0));
+        return customerService.insert(new Customer(account, name, password, phone, IS_USING.getCode(),0));
     }
 
     @RequestMapping("/update")

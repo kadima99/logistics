@@ -3,6 +3,7 @@ package com.lnsf.logistics.service;
 import com.lnsf.logistics.entity.Locations;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LocationsService {
 
@@ -12,6 +13,6 @@ public interface LocationsService {
 
     Locations selectById(Integer id);
 
-    Locations selectLocationsByAddress(String address);
+    Map<String,Object> selectLocationsByAddress(String address);
 
 }

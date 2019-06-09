@@ -9,8 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.lnsf.logistics.Enum.CustomerStatus.FORBID;
-import static com.lnsf.logistics.Enum.CustomerStatus.WAS_USING;
+import static com.lnsf.logistics.Enum.CustomerStatus.*;
 
 @Service
 @Transactional
@@ -78,7 +77,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
-
     @Override
     public Customer selectById(Integer id) {
         return customerMapper.selectById(id);
@@ -94,7 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Boolean recoverById(Integer id){
         Customer customer = customerMapper.selectById(id);
-        customer.setStatus(WAS_USING.getCode());
+        customer.setStatus(IS_USING.getCode());
         return customerMapper.update(customer);
     }
 

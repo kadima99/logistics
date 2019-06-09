@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,18 +89,7 @@ public class UserController {
     public Map<String, Object> resetPassword(@RequestParam("userId") List<Long> userId, HttpServletRequest request) throws JSONException {
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("user");
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (loginUser != null) {
-            for (int i = 0; i < userId.size(); i++) {
-                Integer id = userId.get(i).intValue();
-                User user = userService.selectById(id);
-                user.setPassword("123456");
-                if (userService.update(user).equals("修改成功")) {
-                    map.put("result", true);
-                } else map.put("result", false);
-            }
-        }
-        return map;
+        return userService.resetPassword(userId);
     }
 
     @RequestMapping("/getAccount")
@@ -149,8 +139,9 @@ public class UserController {
         Map<String, Object> map = new HashMap<String, Object>();
         User loginUser = (User) session.getAttribute("user");
         if (loginUser != null) {
+            //account生成规则 仓库名 + 该仓库第几个员工
             Integer count = userService.selectByWarehouseIdCountPage(warehouseId) + 1;
-            String account = warehouseId.toString() + count.toString();  //account生成规则 仓库名 + 该仓库第几个员工
+            String account = new DecimalFormat("00").format(warehouseId) + new DecimalFormat("00").format(count);
             User user = new User(account, "123456", name, phone, role, warehouseId, NO_BUSY.getCode(), 0);
             if (userService.insert(user).equals("插入成功")) {
                 map.put("result", true);
@@ -179,14 +170,7 @@ public class UserController {
     public Map<String, Object> delete(@RequestParam("userId") List<Long> userId, HttpServletRequest request) {
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("user");
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (int i = 0; i < userId.size(); i++) {
-            Integer id = userId.get(i).intValue();
-            if (userService.deleteById(id).equals("删除成功")) {
-                map.put("result", true);
-            } else map.put("result", userService.deleteById(id));
-        }
-        return map;
+        return userService.deleteById(userId);
     }
 
     //    @RequestMapping("/getByPriority")

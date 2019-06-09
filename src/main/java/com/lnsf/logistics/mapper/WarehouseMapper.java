@@ -20,7 +20,7 @@ public interface WarehouseMapper {
     @Select("SELECT * FROM warehouse")
     List<Warehouse> selectAllWarehouseBrief();
 
-    @Select("SELECT * FROM warehouse WHERE area = #{area} ")
+    @Select("SELECT * FROM warehouse WHERE area like #{area} ")
     List<Warehouse> selectByArea(String area);
 
     @Select("SELECT * FROM warehouse WHERE level = #{level} ")

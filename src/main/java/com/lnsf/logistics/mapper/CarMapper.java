@@ -9,14 +9,12 @@ import java.util.List;
 public interface CarMapper {
 
 
-    @Select("SELECT * FROM car LIMIT #{offset},8")
-    List<Car> selectAll(Integer offset);
+    @Select("SELECT * FROM car LIMIT ")
+    List<Car> selectAll();
 
-    @Select("SELECT * FROM car WHERE status = #{status} LIMIT #{offset},8 ")
-    List<Car> selectByStatus(Integer status,Integer offset);
+    @Select("${_parameter}")
+    List<Car> selectByWarehouseId(String sql);
 
-    @Select("SELECT * FROM car WHERE del_mark = #{delMark}  LIMIT #{offset},8")
-    List<Car> selectByDelMark(Integer delMark,Integer offset);
 
     @Select("SELECT * FROM car WHERE car_id = #{id}")
     Car selectById(Integer id);

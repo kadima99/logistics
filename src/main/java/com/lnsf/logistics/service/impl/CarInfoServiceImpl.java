@@ -1,5 +1,6 @@
 package com.lnsf.logistics.service.impl;
 
+import com.lnsf.logistics.entity.Car;
 import com.lnsf.logistics.entity.CarInfo;
 import com.lnsf.logistics.mapper.CarInfoMapper;
 import com.lnsf.logistics.mapper.CarMapper;
@@ -19,30 +20,18 @@ public class CarInfoServiceImpl implements CarInfoService {
 
 
     @Override
-    public List<CarInfo> selectAll(Integer offset) {
-        return carInfoMapper.selectAll(offset);
-    }
-
-    @Override
-    public List<CarInfo> selectByDelMark(Integer delMark, Integer offset) {
-        return carInfoMapper.selectByDelMark(delMark, offset);
-    }
-
-    @Override
-    public List<CarInfo> selectByNextWarehouseId(Integer nextWarehouseId, Integer offset) {
-        return carInfoMapper.selectByNextWarehouseId(nextWarehouseId, offset);
+    public List<CarInfo> selectAll(List<Car> cars) {
+        List<CarInfo> carInfos = null;
+        for (int i = 0; i < cars.size(); i++) {
+            CarInfo carInfo = carInfoMapper.selectById(cars.get(i).getCarId());
+            carInfos.add(carInfo);
+        }
+        return carInfos;
     }
 
     @Override
     public CarInfo selectById(Integer id) {
         return carInfoMapper.selectById(id);
-    }
-
-    @Override
-    public Boolean updateDelMarkById(Integer id) {
-        CarInfo carInfo = selectById(id);
-        carInfo.setDelMark(0);
-        return carInfoMapper.update(carInfo);
     }
 
     @Override

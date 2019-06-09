@@ -8,21 +8,21 @@ public interface OrdersService {
 
     List<Orders> selectAllOrderByTime(Integer offset);
 
-    List<Orders> selectByStatus(Integer status, Integer offset);
-
-    List<Orders> selectByLineId(Integer id, Integer offset);
+    List<Orders> selectByLineId(Integer id);
 
     List<Orders> selectByWarehouseId(Integer id, Integer offset);
 
-    List<Orders> selectByWarehouseId(Integer id);
+    Integer countByWarehouseId(Integer id);
 
-    List<Orders> selectByCustomerId(Integer id,Integer offset);
+    List<Orders> selectByCustomerId(Integer id, Integer offset);
 
-    List<Orders> selectByWarehouseIdAndEnd(Integer warehouseId,Integer endWarehouseId);
+    Integer countByCustomerId(Integer id);
+
+    List<Orders> selectByWarehouseIdAndEnd(Integer warehouseId, Integer endWarehouseId);
 
     Orders selectByOrdersId(Integer id);
 
-    Integer countByWarehouseIdAndEnd(Integer warehouseId,Integer endWarehouseId);
+    Boolean setEndWarehouse(Integer id);
 
     String insert(Orders orders);
 

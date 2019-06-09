@@ -21,15 +21,7 @@ public class OrdersController {
     public List<Orders> getAll() {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
-        return ordersService.selectAllOrderByTime(offset);
-    }
-
-    @RequestMapping("/selectByStatus")
-    public List<Orders> selectByStatus(){
-        Integer page = 1;
-        Integer offset = (page - 1) * 8;
-        Integer status = 1;
-        return ordersService.selectByStatus(status,offset);
+        return ordersService.selectAllOrderByTime(null);
     }
 
     @RequestMapping("/selectByLineId")
@@ -37,7 +29,7 @@ public class OrdersController {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
         Integer lineId = 1;
-        return ordersService.selectByLineId(lineId,offset);
+        return ordersService.selectByLineId(lineId);
     }
 
         @RequestMapping("/selectByWarehouseId")
@@ -53,7 +45,7 @@ public class OrdersController {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
         Integer warehouseId = 1;
-        return ordersService.selectByWarehouseId(warehouseId);
+        return ordersService.selectByWarehouseId(warehouseId,null);
     }
 
     @RequestMapping("/selectByCustomerId")
@@ -79,11 +71,17 @@ public class OrdersController {
         return ordersService.selectByOrdersId(id);
     }
 
-    @RequestMapping("/count")
-    public Integer count() {
-        return ordersService.countByWarehouseIdAndEnd(1, 0);
+    @RequestMapping("setEndWarehouse")
+    public Boolean setEndWarehouse(){
+        Integer id = 1;
+        return ordersService.setEndWarehouse(id);
     }
 
+    @RequestMapping("setEndWarehouse1")
+    public Boolean setEndWarehouse1(){
+        Integer id = 2;
+        return ordersService.setEndWarehouse(id);
+    }
 //    public String insert(Orders orders){
 //        return null;
 //    }

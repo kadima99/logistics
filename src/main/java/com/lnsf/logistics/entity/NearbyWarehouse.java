@@ -6,7 +6,7 @@ public class NearbyWarehouse {
     private Integer id;
     private Integer nearbyWarehouseId;
     private Integer warehouseId;
-    private Float distance;
+    private Integer level;
     private Integer delMark;
 
     public Integer getId() {
@@ -33,12 +33,12 @@ public class NearbyWarehouse {
         this.warehouseId = warehouseId;
     }
 
-    public Float getDistance() {
-        return distance;
+    public Integer getLevel() {
+        return level;
     }
 
-    public void setDistance(Float distance) {
-        this.distance = distance;
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public Integer getDelMark() {
@@ -52,19 +52,19 @@ public class NearbyWarehouse {
     public NearbyWarehouse() {
     }
 
-    public NearbyWarehouse(Integer id, Integer nearbyWarehouseId, Integer warehouseId, Float distance, Integer delMark) {
+    public NearbyWarehouse(Integer id, Integer nearbyWarehouseId, Integer warehouseId, Integer level, Integer delMark) {
         this.id = id;
         this.nearbyWarehouseId = nearbyWarehouseId;
         this.warehouseId = warehouseId;
-        this.distance = distance;
+        this.level = level;
         this.delMark = delMark;
     }
 
-    public NearbyWarehouse(Integer nearbyWarehouseId, Integer warehouseId, Float distance, Integer delMark) {
+    public NearbyWarehouse(Integer nearbyWarehouseId, Integer warehouseId, Integer level, Integer delMark) {
 
         this.nearbyWarehouseId = nearbyWarehouseId;
         this.warehouseId = warehouseId;
-        this.distance = distance;
+        this.level = level;
         this.delMark = delMark;
     }
 
@@ -74,7 +74,7 @@ public class NearbyWarehouse {
                 "id=" + id +
                 ", nearbyWarehouseId=" + nearbyWarehouseId +
                 ", warehouseId=" + warehouseId +
-                ", distance=" + distance +
+                ", level=" + level +
                 ", delMark=" + delMark +
                 '}';
     }

@@ -6,6 +6,10 @@ public class Car {
     private Float maxWeight;
     private Float residueWeight;
     private Integer status;
+
+
+    private Integer level;
+    private Integer lineId;
     private Integer delMark;
 
     public Integer getCarId() {
@@ -48,6 +52,22 @@ public class Car {
         this.status = status;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Integer getLineId() {
+        return lineId;
+    }
+
+    public void setLineId(Integer lineId) {
+        this.lineId = lineId;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
@@ -59,22 +79,27 @@ public class Car {
     public Car() {
     }
 
-    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer delMark) {
+    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status,Integer level,Integer lineId, Integer delMark) {
         this.carId = carId;
         this.userId = userId;
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
         this.status = status;
+        this.level = level;
+        this.lineId = lineId;
         this.delMark = delMark;
     }
 
-    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer delMark) {
+    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer level,Integer lineId, Integer delMark) {
         this.userId = userId;
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
         this.status = status;
+        this.level = level;
+        this.lineId = lineId;
         this.delMark = delMark;
     }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -83,6 +108,8 @@ public class Car {
                 ", maxWeight=" + maxWeight +
                 ", residueWeight=" + residueWeight +
                 ",status=" + status +
+                ",level=" + level +
+                ",lineId=" + lineId +
                 ", delMark=" + delMark +
                 '}';
     }

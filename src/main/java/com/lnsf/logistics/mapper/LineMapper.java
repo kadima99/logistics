@@ -9,14 +9,14 @@ import java.util.List;
 @Mapper
 public interface LineMapper {
 
-    @Select("SELECT * FROM line limit #{offset},8")
-    List<Line> selectAll(Integer offset);
+    @Select("SELECT * FROM line limit ")
+    List<Line> selectAll();
 
-    @Select("SELECT * FROM line WHERE begin_id = #{id} limit #{offset},8")
-    List<Line> selectByBeginId(Integer id, Integer offset);
+    @Select("SELECT * FROM line WHERE begin_id = #{id} ")
+    List<Line> selectByBeginId(Integer id);
 
-    @Select("SELECT * FROM line WHERE begin_id = #{beginId} AND end_id = #{endId} limit #{offset},8")
-    List<Line> selectByBeginIdEndId(Integer beginId, Integer endId, Integer offset);
+    @Select("SELECT * FROM line WHERE begin_id = #{beginId} AND end_id = #{endId} ")
+    List<Line> selectByBeginIdEndId(Integer beginId, Integer endId);
 
     @Select("SELECT * FROM line WHERE line_id = #{id}")
     Line selectById(Integer id);

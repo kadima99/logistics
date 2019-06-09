@@ -13,34 +13,20 @@ public interface UserMapper {
     @Select("${_parameter}")
     List<User> selectAll(String sql);
 
-    @Select("SELECT * FROM user WHERE priority = #{priority} LIMIT #{offset},8")
-    List<User> selectByPriority(Integer priority, Integer offset);//通过权限查找
-
-    @Select("SELECT * FROM user WHERE status = #{status} LIMIT #{offset},8")
-    List<User> selectByStatus(Integer status, Integer offset);
-
-    @Select("SELECT * FROM user WHERE warehouse_id = #{warehouseId} LIMIT #{offset},8")
-    List<User> selectByWarehouseId(Integer warehouseId, Integer offset);
-
-    @Select("SELECT * FROM user WHERE name = #{name} LIMIT #{offset},8")
-    List<User> selectByName(String name, Integer offset);
-
     @Select("${_parameter}")
     Integer selectAllCountPage(String sql);
 
-    @Select("SELECT count(user_id) FROM user WHERE priority = #{priority} ")
-    Integer selectByPriorityCountPage(Integer priority);//通过权限查找
+    @Select("SELECT * FROM user WHERE priority = #{priority} ")
+    List<User> selectByPriority(Integer priority);//通过权限查找
 
-    @Select("SELECT count(user_id) FROM user WHERE status = #{status} ")
-    Integer selectByStatusCountPage(Integer status);
+    @Select("SELECT * FROM user WHERE status = #{status} ")
+    List<User> selectByStatus(Integer status);
 
-    @Select("SELECT count(user_id) FROM user WHERE warehouse_id = #{warehouseId} ")
+    @Select("SELECT * FROM user WHERE warehouse_id = #{warehouseId} ")
+    List<User> selectByWarehouseId(Integer warehouseId);
+
+    @Select("SELECT count(*) FROM user WHERE warehouse_id = #{warehouseId} ")
     Integer selectByWarehouseIdCountPage(Integer warehouseId);
-
-    @Select("SELECT count(user_id) FROM user WHERE name = #{name} ")
-    Integer selectByNameCountPage(String name);
-
-
 
     @Select("SELECT * FROM user WHERE user_id = #{id}")
     User selectById(Integer id);

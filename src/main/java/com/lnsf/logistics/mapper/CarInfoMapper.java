@@ -11,14 +11,8 @@ import java.util.List;
 @Mapper
 public interface CarInfoMapper {
 
-    @Select("SELECT * FROM car_info LIMIT #{offset},8")
-    List<CarInfo> selectAll(Integer offset);
-
-    @Select("SELECT * FROM car_info WHERE del_mark = #{delMark} LIMIT #{offset},8")
-    List<CarInfo> selectByDelMark(Integer delMark,Integer offset);
-
-    @Select("SELECT * FROM car_info WHERE next_warehouse_id = #{nextWarehouseId} LIMIT #{offset},8")
-    List<CarInfo> selectByNextWarehouseId(Integer nextWarehouseId,Integer offset);
+    @Select("SELECT * FROM car_info ")
+    List<CarInfo> selectAll();
 
     @Select("SELECT * FROM car_info WHERE car_id = #{id}")
     CarInfo selectById(Integer id);

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.lnsf.logistics.Enum.NearbyWarehouseLevel.*;
+
 @Service
 @Transactional
 public class NearbyWarehouseServiceImpl implements NearbyWarehouseService {
@@ -21,13 +23,13 @@ public class NearbyWarehouseServiceImpl implements NearbyWarehouseService {
     private WarehouseMapper warehouseMapper;
 
     @Override
-    public List<NearbyWarehouse> selectAll(Integer offset) {
-        return nearbyWarehouseMapper.selectAll(offset);
+    public List<NearbyWarehouse> selectAll() {
+        return nearbyWarehouseMapper.selectAll();
     }
 
     @Override
-    public List<NearbyWarehouse> selectByWarehouseId(Integer id, Integer offset) {
-        return nearbyWarehouseMapper.selectByWarehouseId(id, offset);
+    public List<NearbyWarehouse> selectByWarehouseIdAndLevel(Integer id,Integer level) {
+        return nearbyWarehouseMapper.selectByWarehouseIdAndLevel(id,level);
     }
 
     @Override
@@ -37,15 +39,10 @@ public class NearbyWarehouseServiceImpl implements NearbyWarehouseService {
 
     @Override
     public NearbyWarehouse selectByWarehouseIdAndOthers(Integer id, Integer others) {
-        if (nearbyWarehouseMapper.selectByWarehouseIdAndOthers(id, others) != null){
+        if (nearbyWarehouseMapper.selectByWarehouseIdAndOthers(id, others) != null) {
             return nearbyWarehouseMapper.selectByWarehouseIdAndOthers(id, others);
-        }else return nearbyWarehouseMapper.selectByWarehouseIdAndOthers(others,id);
+        } else return nearbyWarehouseMapper.selectByWarehouseIdAndOthers(others, id);
 
-    }
-
-    @Override
-    public NearbyWarehouse selectByDelMark(Integer delMark) {
-        return nearbyWarehouseMapper.selectByDelMark(delMark);
     }
 
     @Override
@@ -53,8 +50,8 @@ public class NearbyWarehouseServiceImpl implements NearbyWarehouseService {
         if (warehouseMapper.selectById(nearbyWarehouse.getWarehouseId()) != null && warehouseMapper.selectById(nearbyWarehouse.getNearbyWarehouseId()) != null) {
             if (nearbyWarehouseMapper.selectByWarehouseIdAndOthers(nearbyWarehouse.getWarehouseId(), nearbyWarehouse.getNearbyWarehouseId()) != null) {
                 return "该路线已存在！";
-            } else if (nearbyWarehouse.getDistance() == null) {
-                return "距离不能为空！";
+            } else if (nearbyWarehouse.getLevel() == null || !nearbyWarehouse.getLevel().equals(LEVEL_1)|| !nearbyWarehouse.getLevel().equals(LEVEL_2)|| !nearbyWarehouse.getLevel().equals(LEVEL_3)) {
+                return "请输入正确的等级！";
             } else if (nearbyWarehouseMapper.insert(nearbyWarehouse)) {
                 return "插入成功";
             } else return "插入失败";

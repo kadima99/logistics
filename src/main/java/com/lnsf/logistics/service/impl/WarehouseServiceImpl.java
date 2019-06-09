@@ -77,6 +77,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public List<Warehouse> selectByArea(String area) {
+        area.concat("%");
         return warehouseMapper.selectByArea(area);
     }
 

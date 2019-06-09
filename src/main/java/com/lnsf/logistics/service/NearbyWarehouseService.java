@@ -6,15 +6,13 @@ import java.util.List;
 
 public interface NearbyWarehouseService {
 
-    List<NearbyWarehouse> selectAll(Integer offset);
+    List<NearbyWarehouse> selectAll();
 
-    List<NearbyWarehouse> selectByWarehouseId(Integer id, Integer offset);
+    List<NearbyWarehouse> selectByWarehouseIdAndLevel(Integer id,Integer level);
 
     NearbyWarehouse selectById(Integer id);
 
     NearbyWarehouse selectByWarehouseIdAndOthers(Integer id, Integer others);
-
-    NearbyWarehouse selectByDelMark(Integer delMark);
 
     String insert(NearbyWarehouse nearbyWarehouse);
 

@@ -9,15 +9,11 @@ import java.util.List;
 
 public interface CarService {
 
-    List<Car> selectAll(Integer offset);
+    List<Car> selectAll();
 
-    List<Car> selectByStatus(Integer status,Integer offset);
-
-    List<Car> selectByDelMark(Integer delMark,Integer offset);
+    List<Car> selectByWarehouseId(Integer id,Integer level,Integer status,Integer offset);
 
     Car selectById(Integer id);
-
-    Boolean updateDelMarkById (Integer id);
 
     String insert(Car car);
 

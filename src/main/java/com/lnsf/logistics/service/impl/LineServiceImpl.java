@@ -21,18 +21,18 @@ public class LineServiceImpl implements LineService {
     private WarehouseMapper warehouseMapper;
 
     @Override
-    public List<Line> selectAll(Integer offset) {
-        return lineMapper.selectAll(offset);
+    public List<Line> selectAll() {
+        return lineMapper.selectAll();
     }
 
     @Override
-    public List<Line> selectByBeginId(Integer id, Integer offset) {
-        return lineMapper.selectByBeginId(id,offset);
+    public List<Line> selectByBeginId(Integer id) {
+        return lineMapper.selectByBeginId(id);
     }
 
     @Override
-    public List<Line> selectByBeginIdEndId(Integer beginId, Integer endId, Integer offset) {
-        return lineMapper.selectByBeginIdEndId(beginId,endId,offset);
+    public List<Line> selectByBeginIdEndId(Integer beginId, Integer endId) {
+        return lineMapper.selectByBeginIdEndId(beginId, endId);
     }
 
     @Override

@@ -3,12 +3,15 @@ package com.lnsf.logistics.service.impl;
 
 import com.lnsf.logistics.entity.User;
 import com.lnsf.logistics.mapper.UserMapper;
+import com.lnsf.logistics.service.OrdersService;
 import com.lnsf.logistics.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.lnsf.logistics.Enum.UserStatus.IS_BUSY;
 
@@ -40,23 +43,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> selectByPriority(Integer priority, Integer offset) {
-        return userMapper.selectByPriority(priority, offset);
+    public List<User> selectByPriority(Integer priority) {
+        return userMapper.selectByPriority(priority);
     }
 
     @Override
-    public List<User> selectByStatus(Integer status, Integer offset) {
-        return userMapper.selectByStatus(status, offset);
+    public List<User> selectByStatus(Integer status) {
+        return userMapper.selectByStatus(status);
     }
 
     @Override
-    public List<User> selectByWarehouseId(Integer warehouseId, Integer offset) {
-        return userMapper.selectByWarehouseId(warehouseId, offset);
-    }
-
-    @Override
-    public List<User> selectByName(String name, Integer offset) {
-        return userMapper.selectByName(name, offset);
+    public List<User> selectByWarehouseId(Integer warehouseId) {
+        return userMapper.selectByWarehouseId(warehouseId);
     }
 
     @Override
@@ -80,12 +78,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer selectByStatusCountPage(Integer status) {
-        return userMapper.selectByStatusCountPage(status);
-    }
-
-
-    @Override
     public User selectById(Integer id) {
         return userMapper.selectById(id);
     }
@@ -98,6 +90,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User selectByAccount(String account) {
         return userMapper.selectByAccount(account);
+    }
+
+    @Override
+    public Map<String, Object> resetPassword(List<Long> userId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < userId.size(); i++) {
+            Integer id = userId.get(i).intValue();
+            User user = userMapper.selectById(id);
+            user.setPassword("123456");
+            if (userMapper.update(user).equals("修改成功")) {
+                map.put("result", true);
+            } else map.put("result", false);
+        }
+        return map;
     }
 
     @Override
@@ -127,15 +133,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String deleteById(Integer id) {
-        if (selectById(id) != null) {
-            if (userMapper.selectById(id).getDelMark() == 1) {
-                return "该用户已经删除！请勿重复操作";
-            } else if (userMapper.selectById(id).getStatus().equals(IS_BUSY.getCode())) {
-                return "请确保该员工不再工作中再删除！";
-            } else if (userMapper.deleteById(id)) {
-                return "删除成功";
-            } else return "删除失败";
-        } else return "id有误！";
+    public Map<String, Object> deleteById(List<Long> userId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < userId.size(); i++) {
+            Integer id = userId.get(i).intValue();
+            if (selectById(id) != null) {
+                if (userMapper.selectById(id).getDelMark() == 1) {
+                    map.put("result", "该用户已经删除！请勿重复操作");
+                } else if (userMapper.selectById(id).getStatus().equals(IS_BUSY.getCode())) {
+                    map.put("result", "请确保该员工不再工作中再删除");
+                } else if (userMapper.deleteById(id)) {
+                    map.put("result", true);
+                } else map.put("result", "删除失败");
+            } else map.put("result", "id有误");
+            if (userMapper.deleteById(id).equals("删除成功")) {
+                map.put("result", true);
+            } else map.put("result", userMapper.deleteById(id));
+        }
+
+        return map;
     }
 }

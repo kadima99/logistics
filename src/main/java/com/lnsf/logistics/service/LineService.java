@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface LineService {
 
-    List<Line> selectAll(Integer offset);
+    List<Line> selectAll();
 
-    List<Line> selectByBeginId(Integer id, Integer offset);
+    List<Line> selectByBeginId(Integer id);
 
-    List<Line> selectByBeginIdEndId(Integer beginId, Integer endId, Integer offset);
+    List<Line> selectByBeginIdEndId(Integer beginId, Integer endId);
 
     Line selectById(Integer id);
 
