@@ -36,10 +36,10 @@ public interface OrdersMapper {
     @Select("SELECT * FROM orders WHERE order_id = #{id} ")
     Orders selectByOrdersId(Integer id);
 
-    @Insert("INSERT INTO orders VALUES(#{orderId},#{customerId},#{customerName},#{customerPhone},#{customerProvince},#{customerCity},#{customerId},#{customerAddress},#{receiverName},#{receiverPhone},#{receiverProvince},#{receiverCity},#{customer_id},#{receiverAddress},#{wareWeight},#{freight},#{createDate},#{confirmDate},#{lineId},#{status},#{warehouseId},#{endWarehouseId})")
+    @Insert("INSERT INTO orders VALUES(#{orderId},#{customerId},#{customerName},#{customerPhone},#{customerProvince},#{customerCity},#{customerId},#{customerAddress},#{receiverName},#{receiverPhone},#{receiverProvince},#{receiverCity},#{customer_id},#{receiverAddress},#{wareWeight},#{freight},#{createDate},#{confirmDate},#{status},#{warehouseId},#{endWarehouseId})")
     Boolean insert(Orders orders);
 
-    @Update("UPDATE orders SET customer_id=#{customerId},customer_name=#{customerName},customer_phone=#{customerPhone},customer_province = #{customerProvince},customer_city = #{customerCity},customer_address = #{customerAddress},receiver_name = #{receiverName},receiver_phone = #{receiverPhone}, receiver_province=#{receiverProvince},receiver_city = #{receiverCity},receiver_address = #{receiverAddress},ware_weight = #{wareWeight},freight = #{freight},create_date = #{createDate},confirm_date = #{confirmDate},line_id = #{lineId},status = #{status},warehouse_id = #{warehouseId},end_warehouse_id = #{endWarehouseId} WHERE order_id=#{orderId}")
+    @Update("UPDATE orders SET customer_id=#{customerId},customer_name=#{customerName},customer_phone=#{customerPhone},customer_province = #{customerProvince},customer_city = #{customerCity},customer_address = #{customerAddress},receiver_name = #{receiverName},receiver_phone = #{receiverPhone}, receiver_province=#{receiverProvince},receiver_city = #{receiverCity},receiver_address = #{receiverAddress},ware_weight = #{wareWeight},freight = #{freight},create_date = #{createDate},confirm_date = #{confirmDate},status = #{status},warehouse_id = #{warehouseId},end_warehouse_id = #{endWarehouseId} WHERE order_id=#{orderId}")
     Boolean update(Orders orders);
 
     Boolean delete(Integer id);

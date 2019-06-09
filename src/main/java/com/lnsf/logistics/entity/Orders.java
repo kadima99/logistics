@@ -21,7 +21,7 @@ public class Orders {
     private Float freight;
     private Date createDate;
     private Date confirmDate;
-    private Integer lineId;
+
     private Integer status;
     private Integer warehouseId;
     private Integer endWarehouseId;
@@ -154,14 +154,6 @@ public class Orders {
         this.confirmDate = confirmDate;
     }
 
-    public Integer getLineId() {
-        return lineId;
-    }
-
-    public void setLineId(Integer lineId) {
-        this.lineId = lineId;
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -190,7 +182,7 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status,Integer warehouseId,Integer endWarehouseId) {
+    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer status, Integer warehouseId, Integer endWarehouseId) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.customerName = customerName;
@@ -207,13 +199,12 @@ public class Orders {
         this.freight = freight;
         this.createDate = createDate;
         this.confirmDate = confirmDate;
-        this.lineId = lineId;
         this.status = status;
         this.warehouseId = warehouseId;
         this.endWarehouseId = endWarehouseId;
     }
 
-    public Orders(Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer lineId, Integer status,Integer warehouseId,Integer endWarehouseId) {
+    public Orders(Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer status, Integer warehouseId, Integer endWarehouseId) {
 
         this.customerId = customerId;
         this.customerName = customerName;
@@ -230,7 +221,6 @@ public class Orders {
         this.freight = freight;
         this.createDate = createDate;
         this.confirmDate = confirmDate;
-        this.lineId = lineId;
         this.status = status;
         this.warehouseId = warehouseId;
         this.endWarehouseId = endWarehouseId;
@@ -256,7 +246,6 @@ public class Orders {
                 ", freight=" + freight +
                 ", createDate=" + createDate +
                 ", confirmDate=" + confirmDate +
-                ", lineId=" + lineId +
                 ", status=" + status +
                 ", status=" + warehouseId +
                 ", status=" + endWarehouseId +
