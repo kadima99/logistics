@@ -8,6 +8,7 @@ public class Car {
     private Integer status;
     private Integer level;
     private Integer lineId;
+    private Integer warehouseId;
     private Integer delMark;
 
     public Integer getCarId() {
@@ -66,6 +67,14 @@ public class Car {
         this.lineId = lineId;
     }
 
+    public Integer getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
     public Integer getDelMark() {
         return delMark;
     }
@@ -77,7 +86,7 @@ public class Car {
     public Car() {
     }
 
-    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status,Integer level,Integer lineId, Integer delMark) {
+    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status,Integer level,Integer lineId, Integer warehouseId,Integer delMark) {
         this.carId = carId;
         this.userId = userId;
         this.maxWeight = maxWeight;
@@ -85,15 +94,17 @@ public class Car {
         this.status = status;
         this.level = level;
         this.lineId = lineId;
+        this.warehouseId = warehouseId;
         this.delMark = delMark;
     }
 
-    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer level,Integer lineId, Integer delMark) {
+    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer level,Integer lineId, Integer warehouseId,Integer delMark) {
         this.userId = userId;
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
         this.status = status;
         this.level = level;
+        this.warehouseId = warehouseId;
         this.lineId = lineId;
         this.delMark = delMark;
     }
@@ -108,6 +119,7 @@ public class Car {
                 ",status=" + status +
                 ",level=" + level +
                 ",lineId=" + lineId +
+                ",warehouseId=" + warehouseId +
                 ", delMark=" + delMark +
                 '}';
     }

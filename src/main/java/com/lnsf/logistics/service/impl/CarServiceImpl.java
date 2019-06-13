@@ -2,8 +2,10 @@ package com.lnsf.logistics.service.impl;
 
 import com.lnsf.logistics.entity.Car;
 import com.lnsf.logistics.entity.CarInfo;
+import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.mapper.CarMapper;
 import com.lnsf.logistics.mapper.UserMapper;
+import com.lnsf.logistics.mapper.WarehouseMapper;
 import com.lnsf.logistics.service.CarInfoService;
 import com.lnsf.logistics.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class CarServiceImpl implements CarService {
     private CarMapper carMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WarehouseMapper warehouseMapper;
 
 
     @Override
@@ -53,7 +57,9 @@ public class CarServiceImpl implements CarService {
     public String insert(Car car) {
         if (userMapper.selectById(car.getUserId()) == null) {
             return "查无此人！";
-        } else if (carMapper.selectByUserId(car.getUserId()) != null) {
+        } else if (warehouseMapper.selectById(car.getWarehouseId()) == null){
+           return "请选择正确的仓库";
+        }  else if (carMapper.selectByUserId(car.getUserId()) != null) {
             return "该司机已经分配车辆了！";
         } else if (car.getMaxWeight() == null) {
             return "车辆最大重量不能为空！";
