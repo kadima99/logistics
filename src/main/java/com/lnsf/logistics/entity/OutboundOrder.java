@@ -1,12 +1,14 @@
 package com.lnsf.logistics.entity;
 
+import java.util.Date;
+
 public class OutboundOrder {
     private Integer outboundOrderId;
     private Integer warehouseId;
     private Integer nextWarehouseId;
     private Integer orderId;
-    private Integer carId;
     private Integer delMark;
+    private Date createDate;
 
     public Integer getOutboundOrderId() {
         return outboundOrderId;
@@ -40,14 +42,6 @@ public class OutboundOrder {
         this.orderId = orderId;
     }
 
-    public Integer getCarId() {
-        return carId;
-    }
-
-    public void setCarId(Integer carId) {
-        this.carId = carId;
-    }
-
     public Integer getDelMark() {
         return delMark;
     }
@@ -56,17 +50,35 @@ public class OutboundOrder {
         this.delMark = delMark;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     public OutboundOrder() {
     }
 
-    public OutboundOrder(Integer outboundOrderId, Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer carId, Integer delMark) {
+    public OutboundOrder(Integer outboundOrderId, Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer delMark, Date createDate) {
         this.outboundOrderId = outboundOrderId;
         this.warehouseId = warehouseId;
         this.nextWarehouseId = nextWarehouseId;
         this.orderId = orderId;
-        this.carId = carId;
         this.delMark = delMark;
+        this.createDate = createDate;
     }
+
+    public OutboundOrder(Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer delMark) {
+        this.outboundOrderId = outboundOrderId;
+        this.warehouseId = warehouseId;
+        this.nextWarehouseId = nextWarehouseId;
+        this.orderId = orderId;
+        this.delMark = delMark;
+        this.createDate = createDate;
+    }
+
 
     @Override
     public String toString() {
@@ -75,8 +87,8 @@ public class OutboundOrder {
                 ", warehouseId=" + warehouseId +
                 ", nextWarehouseId=" + nextWarehouseId +
                 ", orderId=" + orderId +
-                ", carId=" + carId +
                 ", delMark=" + delMark +
+                ", createDate=" + createDate +
                 '}';
     }
 }

@@ -1,7 +1,7 @@
 package com.lnsf.logistics.Enum;
 
 public enum CarStatus {
-    IS_BUSY(1,"使用中"),NO_BUSY(2,"空闲中"),MAINTENANCE(3,"维修中");
+    IS_BUSY(1,"使用中"),NO_BUSY(2,"空闲中"),MAINTENANCE(3,"维修中"),FULL(4,"已满");
 
 
     public Integer getCode() {

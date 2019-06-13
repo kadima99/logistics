@@ -1,6 +1,7 @@
 package com.lnsf.logistics.service.impl;
 
 
+import com.lnsf.logistics.entity.Locations;
 import com.lnsf.logistics.entity.Orders;
 import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.mapper.CustomerMapper;
@@ -33,6 +34,12 @@ public class OrdersServiceImpl implements OrdersService {
     @Autowired
     private WarehouseService warehouseService;
 
+
+    @Override
+    public Map<String, Object> getDetails(Integer id) {
+        return null;
+    }
+
     @Override
     public List<Orders> selectAllOrderByTime(Integer offset) {
         String sql = "SELECT * FROM orders where 1=1 ORDER BY create_date ";
@@ -54,7 +61,7 @@ public class OrdersServiceImpl implements OrdersService {
         if (offset != null) {
             sql += " LIMIT " + offset + ",8";
         }
-        return ordersMapper.selectAllOrderByTime(sql);
+        return ordersMapper.selectByWarehouseId(sql);
     }
 
     @Override
@@ -75,7 +82,36 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public List<Orders> selectByWarehouseIdAndEnd(Integer warehouseId, Integer endWarehouseId) {
-        return ordersMapper.selectByWarehouseIdAndEnd(warehouseId, endWarehouseId);
+        String sql = "SELECT * FROM orders where 1=1 ";
+        if (warehouseId != null) {
+            sql += "ANd warehouse_id =" + warehouseId + " ";
+        }
+        sql += "ORDER BY create_date ";
+        return ordersMapper.selectByWarehouseIdAndEnd(sql);
+    }
+
+    @Override
+    public List<Orders> selectByStatusAndWarehouseId(Integer warehouseId, Integer status) {
+        Integer area = warehouseService.selectById(warehouseId).getArea();
+        List<Locations> locations = locationsService.selectByParentId(area);
+        List<Orders> orders = null;
+        for (int i = 0; i < locations.size(); i++) {
+            System.out.println(locations.get(i).getId());
+            Integer countyWarehouseId = null;
+            List<Orders> order = null;
+            if (warehouseService.selectByAreaAndLevel(locations.get(i).getId(), 1) != null) {
+                countyWarehouseId = warehouseService.selectByAreaAndLevel(locations.get(i).getId(), 1).getWarehouseId();
+            }
+            if (countyWarehouseId != null) {
+                order = selectByWarehouseId(countyWarehouseId, null);
+            }
+            if (order != null) {
+                if (orders != null) {
+                    orders.addAll(order);
+                } else orders = order;
+            }
+        }
+        return orders;
     }
 
     @Override
@@ -87,17 +123,17 @@ public class OrdersServiceImpl implements OrdersService {
     public Boolean setEndWarehouse(Integer id) {
         Orders orders = selectByOrdersId(id);
         Map<String, Object> map = locationsService.selectLocationsByAddress(orders.getReceiverAddress());
-        String area = map.get("province").toString() + map.get("city").toString();
+        Integer area = (Integer) map.get("city");
         if (warehouseService.selectByAreaAndLevel(area, 3) != null) {
             if (warehouseService.selectByAreaAndLevel(area, 3).getWarehouseId().equals(orders.getWarehouseId())) {
-                area += map.get("county").toString();
+                area = (Integer) map.get("county");
                 List<Warehouse> warehouseList = warehouseService.selectByArea(area);
                 if (warehouseList != null) {
                     orders.setEndWarehouseId(warehouseList.get(0).getWarehouseId());
                 }
-            } else orders.setEndWarehouseId(warehouseService.selectByAreaAndLevel(area, 3).getWarehouseId());
-
-        }else return false;
+            } else return false;
+//            } else orders.setEndWarehouseId(warehouseService.selectByAreaAndLevel(area, 3).getWarehouseId());
+        } else return false;
         if (ordersMapper.update(orders)) {
             return true;
         } else return false;

@@ -1,6 +1,7 @@
 package com.lnsf.logistics.controller;
 
 import com.lnsf.logistics.entity.Warehouse;
+import com.lnsf.logistics.service.LocationsService;
 import com.lnsf.logistics.service.WarehouseService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +22,8 @@ public class WarehouseController {
 
     @Autowired
     private WarehouseService warehouseService;
+    @Autowired
+    private LocationsService locationsService;
 
     @RequestMapping("/getAll")
     public Map<String, Object> getAll(Integer page, String keyword, String city, HttpServletRequest request) {
@@ -49,10 +52,9 @@ public class WarehouseController {
     @RequestMapping("/add")
     public Map<String, Object> add(String name, Integer userId, Integer level, Float maxWeight, String address) {
         Map<String, Object> map = new HashMap<String, Object>();
-        Warehouse warehouse = new Warehouse(name, address, userId, address, level, maxWeight, 0f, 0);
-        if (warehouseService.insert(warehouse).equals("插入成功")) {
+        if (warehouseService.insert(name,userId,level,maxWeight,address).equals("插入成功")) {
             map.put("result", true);
-        } else map.put("result", warehouseService.insert(warehouse));
+        } else map.put("result", warehouseService.insert(name,userId,level,maxWeight,address));
         return map;
 
     }
@@ -72,13 +74,11 @@ public class WarehouseController {
 
     }
 
-    //    @RequestMapping("/getByArea")
-//    public List<Warehouse> getByArea() {
-//        Integer page = 1;
-//        Integer offset = (page - 1) * 8;
-//        String area = "北京";
-//        return warehouseService.selectByArea(area, offset);
-//    }
+        @RequestMapping("/getByArea")
+    public List<Warehouse> getByArea() {
+        Integer area = 308;
+        return warehouseService.selectByArea(area);
+    }
 //
 //    @RequestMapping("/getByLevel")
 //    public List<Warehouse> getByLevel() {

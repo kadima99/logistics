@@ -23,10 +23,10 @@ public class CustomerController {
     private CustomerService customerService;
 
     @RequestMapping("/getAll")
-    public Map<String, Object> selectAll(String keyword, Integer status, Integer page,HttpServletRequest request) {
+    public Map<String, Object> selectAll(String keyword, Integer status, Integer page, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        if (session.getAttribute("customer") != null) {
+        if (session.getAttribute("user") != null) {
             List<Customer> customer = customerService.selectAll(0, keyword, status, (page - 1) * 8);
             map.put("customerData", customer);
             double totalPage = Math.ceil(customerService.selectAllCountPage(0, keyword, status) / 8.0);
@@ -37,16 +37,15 @@ public class CustomerController {
 
 
     @RequestMapping("/getAllHistory")
-    public Map<String, Object> getAllHistory(String keyword, Integer status, Integer page,HttpServletRequest request) {
+    public Map<String, Object> getAllHistory(String keyword, Integer status, Integer page, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Map<String, Object> map = new HashMap<String, Object>();
-        if (session.getAttribute("customer") != null){
+        if (session.getAttribute("user") != null) {
             List<Customer> customer = customerService.selectAll(1, keyword, status, (page - 1) * 8);
             map.put("customerData", customer);
             double totalPage = Math.ceil(customerService.selectAllCountPage(1, keyword, status) / 8.0);
             map.put("totalPage", totalPage);
         }
-
         return map;
     }
 
@@ -81,7 +80,7 @@ public class CustomerController {
         String name = "text110";
         String password = "123456";
         String phone = "12345678901";
-        return customerService.insert(new Customer(account, name, password, phone, IS_USING.getCode(),0));
+        return customerService.insert(new Customer(account, name, password, phone, IS_USING.getCode(), 0));
     }
 
     @RequestMapping("/update")
@@ -91,7 +90,7 @@ public class CustomerController {
         String name = "44";
         String password = "123456";
         String phone = "110";
-        return customerService.update(new Customer(id, account, name, password, phone,1,0));
+        return customerService.update(new Customer(id, account, name, password, phone, 1, 0));
     }
 
     @RequestMapping("/getByName")

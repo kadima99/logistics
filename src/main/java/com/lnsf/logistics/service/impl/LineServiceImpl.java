@@ -41,8 +41,9 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public Boolean insert(Line line) {
-        return lineMapper.insert(line);
+    public Boolean insert(List<Integer> allWarehouseId,Integer beginId,Integer endId) {
+        String lineSummary = allWarehouseId.toString();
+        return lineMapper.insert(new Line(lineSummary,beginId,endId,0));
     }
 
     @Override

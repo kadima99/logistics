@@ -13,6 +13,8 @@ public interface LocationsService {
 
     Locations selectById(Integer id);
 
+    List<Locations> selectByParentId(Integer id);
+
     Map<String,Object> selectLocationsByAddress(String address);
 
 }

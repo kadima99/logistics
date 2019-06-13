@@ -6,7 +6,7 @@ public class Warehouse {
     private String name;
     private String address;
     private Integer userId;
-    private String area;
+    private Integer area;
     private Integer level;
     private float maxWeight;
     private float residueWeight;
@@ -44,11 +44,11 @@ public class Warehouse {
         this.userId = userId;
     }
 
-    public String getArea() {
+    public Integer getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(Integer area) {
         this.area = area;
     }
 
@@ -88,7 +88,7 @@ public class Warehouse {
     public Warehouse() {
     }
 
-    public Warehouse(Integer warehouseId, String name, String address, Integer userId, String area , Integer level, float maxWeight, float residueWeight,Integer status) {
+    public Warehouse(Integer warehouseId, String name, String address, Integer userId, Integer area , Integer level, float maxWeight, float residueWeight,Integer status) {
         this.warehouseId = warehouseId;
         this.name = name;
         this.address = address;
@@ -101,7 +101,7 @@ public class Warehouse {
     }
 
 
-    public Warehouse(String name, String address, Integer userId, String area , Integer level, float maxWeight, float residueWeight,Integer status) {
+    public Warehouse(String name, String address, Integer userId, Integer area , Integer level, float maxWeight, float residueWeight,Integer status) {
         this.name = name;
         this.address = address;
         this.userId = userId;

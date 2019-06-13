@@ -36,6 +36,11 @@ public class LocationsServiceImpl implements LocationsService {
     }
 
     @Override
+    public List<Locations> selectByParentId(Integer id){
+        return locationsMapper.selectByParentId(id);
+    }
+
+    @Override
     public Map<String,Object> selectLocationsByAddress(String address){
         Map<String,Object> map = new HashMap<String, Object>();
         String regex = "(?<province>[^省]+自治区|.*?省|.*?行政区|.*?市)(?<city>[^市]+自治州|.*?地区|.*?行政单位|.+盟|市辖区|.*?市|.*?县)(?<county>[^县]+县|.+区|.+市|.+旗|.+海域|.+岛)?(?<town>[^区]+区|.+镇)?(?<village>.*)";
@@ -43,11 +48,16 @@ public class LocationsServiceImpl implements LocationsService {
         String province = "", city = "", county = "";
         while (m.find()) {
             province = m.group("province");
-            map.put("province",province);
+            map.put("province",locationsMapper.selectByName(province));
             city = m.group("city");
-            map.put("city",city);
+            map.put("city",locationsMapper.selectByName(city));
             county = m.group("county");
-            map.put("county",county);
+            if (locationsMapper.selectByName(county) != null){
+                map.put("county",locationsMapper.selectByName(county));
+                map.put("flag",3);
+            }else map.put("flag",2);
+
+
         }
 
         return map;

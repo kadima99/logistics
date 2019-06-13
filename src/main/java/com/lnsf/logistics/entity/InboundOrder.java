@@ -1,10 +1,13 @@
 package com.lnsf.logistics.entity;
 
+import java.util.Date;
+
 public class InboundOrder {
     private Integer inboundOrderId;
     private Integer orderId;
     private Integer warehouseId;
     private Integer delMark;
+    private Date createDate;
 
     public Integer getInboundOrderId() {
         return inboundOrderId;
@@ -38,11 +41,26 @@ public class InboundOrder {
         this.delMark = delMark;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     public InboundOrder() {
     }
 
-    public InboundOrder(Integer inboundOrderId, Integer orderId, Integer warehouseId, Integer delMark) {
+    public InboundOrder(Integer inboundOrderId, Integer orderId, Integer warehouseId, Integer delMark, Date createDate) {
         this.inboundOrderId = inboundOrderId;
+        this.orderId = orderId;
+        this.warehouseId = warehouseId;
+        this.delMark = delMark;
+        this.createDate = createDate;
+    }
+
+    public InboundOrder( Integer orderId, Integer warehouseId, Integer delMark) {
         this.orderId = orderId;
         this.warehouseId = warehouseId;
         this.delMark = delMark;
@@ -55,6 +73,7 @@ public class InboundOrder {
                 ", orderId=" + orderId +
                 ", warehouseId=" + warehouseId +
                 ", delMark=" + delMark +
+                ", createDate=" + createDate +
                 '}';
     }
 }

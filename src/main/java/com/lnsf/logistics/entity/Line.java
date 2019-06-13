@@ -58,6 +58,13 @@ public class Line {
         this.delMark = delMark;
     }
 
+    public Line(String lineSummary, Integer beginId, Integer endId, Integer delMark) {
+        this.lineSummary = lineSummary;
+        this.beginId = beginId;
+        this.endId = endId;
+        this.delMark = delMark;
+    }
+
     @Override
     public String toString() {
         return "Line{" +

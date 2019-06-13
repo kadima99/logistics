@@ -19,7 +19,7 @@ public class LineController {
     public List<Line> selectAll() {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
-        return lineService.selectAll(offset);
+        return lineService.selectAll();
     }
 
     @RequestMapping("/selectByBeginId")
@@ -27,7 +27,7 @@ public class LineController {
         Integer page = 1;
         Integer offset = (page - 1) * 8;
         Integer id = 1;
-        return lineService.selectByBeginId(id, offset);
+        return lineService.selectByBeginId(id);
     }
 
     @RequestMapping("/selectByBeginIdEndId")
@@ -36,7 +36,7 @@ public class LineController {
         Integer offset = (page - 1) * 8;
         Integer beginId = 1;
         Integer endId = 3;
-        return lineService.selectByBeginIdEndId(beginId, endId, offset);
+        return lineService.selectByBeginIdEndId(beginId, endId);
     }
 
     @RequestMapping("/selectById")

@@ -6,8 +6,6 @@ public class Car {
     private Float maxWeight;
     private Float residueWeight;
     private Integer status;
-
-
     private Integer level;
     private Integer lineId;
     private Integer delMark;

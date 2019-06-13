@@ -82,6 +82,13 @@ public class OrdersController {
         Integer id = 2;
         return ordersService.setEndWarehouse(id);
     }
+
+
+    @RequestMapping("selectByStatusAndWarehouseId")
+    public List<Orders> selectByStatusAndWarehouseId(){
+        Integer id = 1;
+        return ordersService.selectByStatusAndWarehouseId(1,0);
+    }
 //    public String insert(Orders orders){
 //        return null;
 //    }

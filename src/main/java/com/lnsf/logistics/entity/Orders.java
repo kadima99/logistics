@@ -21,7 +21,6 @@ public class Orders {
     private Float freight;
     private Date createDate;
     private Date confirmDate;
-
     private Integer status;
     private Integer warehouseId;
     private Integer endWarehouseId;

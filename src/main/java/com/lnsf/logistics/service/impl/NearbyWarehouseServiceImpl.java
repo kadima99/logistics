@@ -45,6 +45,8 @@ public class NearbyWarehouseServiceImpl implements NearbyWarehouseService {
 
     }
 
+
+
     @Override
     public String insert(NearbyWarehouse nearbyWarehouse) {
         if (warehouseMapper.selectById(nearbyWarehouse.getWarehouseId()) != null && warehouseMapper.selectById(nearbyWarehouse.getNearbyWarehouseId()) != null) {

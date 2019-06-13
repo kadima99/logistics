@@ -12,7 +12,7 @@ public interface WarehouseService {
 
     List<Warehouse> selectAllWarehouseBrief();
 
-    List<Warehouse> selectByArea(String area);
+    List<Warehouse> selectByArea(Integer area);
 
     List<Warehouse> selectByLevel(Integer level);
 
@@ -20,11 +20,11 @@ public interface WarehouseService {
 
     Warehouse selectByUserId(Integer id);
 
-    Warehouse selectByAreaAndLevel(String area, Integer level);
+    Warehouse selectByAreaAndLevel(Integer area, Integer level);
 
     Warehouse selectByName(String name);
 
-    String insert(Warehouse warehouse);
+    String insert(String name, Integer userId, Integer level, Float maxWeight, String address);
 
     String update(Warehouse warehouse);
 

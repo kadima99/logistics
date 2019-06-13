@@ -14,7 +14,7 @@ public interface LineService {
 
     Line selectById(Integer id);
 
-    Boolean insert(Line line);
+    Boolean insert(List<Integer> allWarehouseId,Integer beginId,Integer endId);
 
     Boolean update(Line line);
 

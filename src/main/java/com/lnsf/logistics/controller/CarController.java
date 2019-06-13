@@ -29,7 +29,7 @@ public class CarController {
         int offset = (page - 1) * 8;
         // return carService.selectAll(offset);
 
-        List<Car> lc = carService.selectAll(offset);
+        List<Car> lc = carService.selectAll();
         JSONObject jsonObject1 = new JSONObject();
         JSONArray array = new JSONArray();
         for (int i = 0; i < lc.size(); i++) {
@@ -54,14 +54,6 @@ public class CarController {
 
     }
 
-    @RequestMapping("/getByStatus")
-    public List<Car> getByStatus() {
-        int page = 1;
-        int offset = (page - 1) * 8;
-        int status = 1;
-        return carService.selectByStatus(status, offset);
-    }
-
     @RequestMapping("/getById")
     public Car getById() {
         int page = 1;
@@ -70,26 +62,26 @@ public class CarController {
         return carService.selectById(id);
     }
 
-    @RequestMapping("/add")
-    public String add() {
-        Integer userId = 3;
-        Float maxWeight = 1000f;
-        Float residueWeight = 800f;
-        Integer status = 1;
-        Integer delMark = 0;
-        return carService.insert(new Car(userId, maxWeight, residueWeight, status, delMark));
-    }
-
-    @RequestMapping("/update")
-    public String update() {
-        Integer id = 2;
-        Integer userId = 3;
-        Float maxWeight = 2000f;
-        Float residueWeight = 800f;
-        Integer status = 1;
-        Integer delMark = 0;
-        return carService.update(new Car(id, userId, maxWeight, residueWeight, status, delMark));
-    }
+//    @RequestMapping("/add")
+//    public String add() {
+//        Integer userId = 3;
+//        Float maxWeight = 1000f;
+//        Float residueWeight = 800f;
+//        Integer status = 1;
+//        Integer delMark = 0;
+//        return carService.insert(new Car(userId, maxWeight, residueWeight, status, delMark));
+//    }
+//
+//    @RequestMapping("/update")
+//    public String update() {
+//        Integer id = 2;
+//        Integer userId = 3;
+//        Float maxWeight = 2000f;
+//        Float residueWeight = 800f;
+//        Integer status = 1;
+//        Integer delMark = 0;
+//        return carService.update(new Car(id, userId, maxWeight, residueWeight, status, delMark));
+//    }
 
     @RequestMapping("/delete")
     public String delete() {

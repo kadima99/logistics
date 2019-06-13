@@ -30,8 +30,8 @@ public interface OrdersMapper {
     @Select("SELECT count(order_id) FROM orders WHERE customer_id = #{id} ORDER BY create_date")
     Integer countByCustomerId(Integer id);
 
-    @Select("SELECT * FROM orders WHERE warehouse_id = #{warehouseId} AND end_warehouse_id = #{endWarehouseId} AND status = 0 ORDER BY create_date")
-    List<Orders> selectByWarehouseIdAndEnd(Integer warehouseId, Integer endWarehouseId);
+    @Select("${_parameter}")
+    List<Orders> selectByWarehouseIdAndEnd(String sql);
 
     @Select("SELECT * FROM orders WHERE order_id = #{id} ")
     Orders selectByOrdersId(Integer id);

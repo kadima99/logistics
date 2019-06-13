@@ -24,7 +24,7 @@ public interface LineMapper {
     @Insert("INSERT INTO line VALUES(#{lineId},#{lineSummary},#{beginId},#{endId},#{delMark})")
     Boolean insert(Line line);
 
-    @Update("UPDATE line SET line_id = #{lineId},line_summary = #{lineSummary},begin_id = #{beginId},end_id = #{endId},del_mark = #{delMark})")
+    @Update("UPDATE line SET line_summary = #{lineSummary},begin_id = #{beginId},end_id = #{endId},del_mark = #{delMark} WHERE line_id = #{lineId}")
     Boolean update(Line line);
 
     @Update("UPDATE line SET del_mark = 1 WHERE line_id =#{id}")

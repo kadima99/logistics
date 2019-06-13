@@ -53,8 +53,7 @@ public class CarServiceImpl implements CarService {
     public String insert(Car car) {
         if (userMapper.selectById(car.getUserId()) == null) {
             return "查无此人！";
-        }
-        if (carMapper.selectByUserId(car.getUserId()) != null) {
+        } else if (carMapper.selectByUserId(car.getUserId()) != null) {
             return "该司机已经分配车辆了！";
         } else if (car.getMaxWeight() == null) {
             return "车辆最大重量不能为空！";
