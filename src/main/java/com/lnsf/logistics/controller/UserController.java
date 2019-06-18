@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lnsf.logistics.Enum.UserPriority.DELIVER;
+import static com.lnsf.logistics.Enum.UserPriority.DRIVER;
 import static com.lnsf.logistics.Enum.UserStatus.NO_BUSY;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -38,23 +40,29 @@ public class UserController {
     private WarehouseService warehouseService;
 
     @RequestMapping(value = "/getAll")
-    public Map<String, Object> getAll(Integer page, String keyword, Integer priority, Integer warehouseId) throws JSONException {
+    public Map<String, Object> getAll(Integer page, String keyword, Integer priority, Integer warehouseId, HttpServletRequest request) throws JSONException {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<User> user = userService.selectAll(0, keyword, priority, warehouseId, (page - 1) * 8);
-        map.put("userData", user);
-        double totalPage = Math.ceil(userService.selectAllCountPage(0, keyword, priority, warehouseId).doubleValue() / 8.0);
-        map.put("totalPage", totalPage);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null) {
+            List<User> user = userService.selectAll(0, keyword, priority, warehouseId, (page - 1) * 8);
+            map.put("userData", user);
+            double totalPage = Math.ceil(userService.selectAllCountPage(0, keyword, priority, warehouseId).doubleValue() / 8.0);
+            map.put("totalPage", totalPage);
+        }
         return map;
     }
 
 
     @RequestMapping(value = "/getAllHistory")
-    public Map<String, Object> getAllHistory(Integer page, String keyword, Integer priority, Integer warehouseId) throws JSONException {
+    public Map<String, Object> getAllHistory(Integer page, String keyword, Integer priority, Integer warehouseId, HttpServletRequest request) throws JSONException {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<User> user = userService.selectAll(0, keyword, priority, warehouseId, (page - 1) * 8);
-        map.put("userData", user);
-        double totalPage = Math.ceil(userService.selectAllCountPage(1, keyword, priority, warehouseId).doubleValue() / 8.0);
-        map.put("totalPage", totalPage);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null) {
+            List<User> users = userService.selectAll(1, keyword, priority, warehouseId, (page - 1) * 8);
+            map.put("userData", users);
+            double totalPage = Math.ceil(userService.selectAllCountPage(1, keyword, priority, warehouseId).doubleValue() / 8.0);
+            map.put("totalPage", totalPage);
+        }
         return map;
     }
 
@@ -87,9 +95,15 @@ public class UserController {
 
     @RequestMapping(value = "/resetPassword", method = POST)
     public Map<String, Object> resetPassword(@RequestParam("userId") List<Long> userId, HttpServletRequest request) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("user");
-        return userService.resetPassword(userId);
+        if (loginUser != null) {
+            return userService.resetPassword(userId);
+        } else {
+            map.put("result", "session过期");
+            return map;
+        }
     }
 
     @RequestMapping("/getAccount")
@@ -171,6 +185,28 @@ public class UserController {
         HttpSession session = request.getSession();
         User loginUser = (User) session.getAttribute("user");
         return userService.deleteById(userId);
+    }
+
+    @RequestMapping("/getDeliver")
+    public List<User> getDeliver(HttpServletRequest request){
+        List<User> users = new ArrayList<User>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null){
+            users = userService.selectByWarehouseIdAndPriority(user.getWarehouseId(),DELIVER.getCode());
+        }
+        return users;
+    }
+
+    @RequestMapping("/getDriver")
+    public List<User> getDriver(HttpServletRequest request){
+        List<User> users = new ArrayList<User>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null){
+            users = userService.selectByWarehouseIdAndPriority(user.getWarehouseId(),DRIVER.getCode());
+        }
+        return users;
     }
 
     //    @RequestMapping("/getByPriority")

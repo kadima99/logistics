@@ -2,6 +2,7 @@ package com.lnsf.logistics.entity;
 
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Orders {
@@ -19,11 +20,12 @@ public class Orders {
     private String receiverAddress;
     private Float wareWeight;
     private Float freight;
-    private Date createDate;
-    private Date confirmDate;
+    private Timestamp createDate;
+    private Timestamp confirmDate;
     private Integer status;
     private Integer warehouseId;
     private Integer endWarehouseId;
+    private Integer userId;
 
     public Integer getOrderId() {
         return orderId;
@@ -137,19 +139,19 @@ public class Orders {
         this.freight = freight;
     }
 
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
-    public Date getConfirmDate() {
+    public Timestamp getConfirmDate() {
         return confirmDate;
     }
 
-    public void setConfirmDate(Date confirmDate) {
+    public void setConfirmDate(Timestamp confirmDate) {
         this.confirmDate = confirmDate;
     }
 
@@ -177,33 +179,30 @@ public class Orders {
         this.endWarehouseId = endWarehouseId;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Orders() {
     }
 
-    public Orders(Integer orderId, Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer status, Integer warehouseId, Integer endWarehouseId) {
-        this.orderId = orderId;
+    public Orders(Integer customerId, String customerName, String customerPhone, String customerAddress, String receiverName, String receiverPhone, String receiverAddress, Integer status, Integer warehouseId) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerPhone = customerPhone;
-        this.customerProvince = customerProvince;
-        this.customerCity = customerCity;
         this.customerAddress = customerAddress;
         this.receiverName = receiverName;
         this.receiverPhone = receiverPhone;
-        this.receiverProvince = receiverProvince;
-        this.receiverCity = receiverCity;
         this.receiverAddress = receiverAddress;
-        this.wareWeight = wareWeight;
-        this.freight = freight;
-        this.createDate = createDate;
-        this.confirmDate = confirmDate;
         this.status = status;
         this.warehouseId = warehouseId;
-        this.endWarehouseId = endWarehouseId;
     }
 
-    public Orders(Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Date createDate, Date confirmDate, Integer status, Integer warehouseId, Integer endWarehouseId) {
+    public Orders(Integer customerId, String customerName, String customerPhone, String customerProvince, String customerCity, String customerAddress, String receiverName, String receiverPhone, String receiverProvince, String receiverCity, String receiverAddress, Float wareWeight, Float freight, Integer status, Integer warehouseId, Integer endWarehouseId) {
 
         this.customerId = customerId;
         this.customerName = customerName;
@@ -218,8 +217,6 @@ public class Orders {
         this.receiverAddress = receiverAddress;
         this.wareWeight = wareWeight;
         this.freight = freight;
-        this.createDate = createDate;
-        this.confirmDate = confirmDate;
         this.status = status;
         this.warehouseId = warehouseId;
         this.endWarehouseId = endWarehouseId;
@@ -246,8 +243,9 @@ public class Orders {
                 ", createDate=" + createDate +
                 ", confirmDate=" + confirmDate +
                 ", status=" + status +
-                ", status=" + warehouseId +
-                ", status=" + endWarehouseId +
+                ", warehouseId=" + warehouseId +
+                ", endWarehouseId=" + endWarehouseId +
+                ", userId=" + userId +
                 '}';
     }
 }

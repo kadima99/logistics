@@ -15,16 +15,19 @@ public interface CarMapper {
     @Select("${_parameter}")
     List<Car> selectByWarehouseId(String sql);
 
+    @Select("${_parameter}")
+    Integer countByWarehouseId(String sql);
+
     @Select("SELECT * FROM car WHERE car_id = #{id}")
     Car selectById(Integer id);
 
     @Select("SELECT * FROM car WHERE user_id = #{id}")
     Car selectByUserId(Integer id);
 
-    @Insert("INSERT car VALUES(#{carId},#{userId},#{maxWeight},#{residueWeight},#{status},#{level},#{warehouseId},#{lineId},#{delMark})")
+    @Insert("INSERT car VALUES(#{carId},#{userId},#{maxWeight},#{residueWeight},#{status},#{level},#{warehouseId},#{nowWarehouseId},#{lineId})")
     Boolean insert(Car car);
 
-    @Update("UPDATE car SET user_id = #{userId},max_weight = #{maxWeight},residue_weight = #{residueWeight},status = #{status},level=#{level},warehouse_id=#{warehouseId},line_id=#{lineId},del_mark = #{delMark} WHERE car_id = #{carId}")
+    @Update("UPDATE car SET user_id = #{userId},max_weight = #{maxWeight},residue_weight = #{residueWeight},status = #{status},level=#{level},warehouse_id=#{warehouseId},now_warehouse_id=#{nowWarehouseId},line_id=#{lineId} WHERE car_id = #{carId}")
     Boolean update(Car car);
 
     @Update("UPDATE car SET del_mark = 1 WHERE car_id = #{id}")

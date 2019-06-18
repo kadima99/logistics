@@ -15,6 +15,8 @@ public interface UserService {
 
     List<User> selectByWarehouseId(Integer warehouseId);
 
+    List<User> selectByWarehouseIdAndPriority(Integer warehouseId,Integer priority);
+
     Integer selectAllCountPage(Integer delMark, String keyword, Integer priority, Integer warehouseId);
 
     Integer selectByWarehouseIdCountPage(Integer warehouseId);

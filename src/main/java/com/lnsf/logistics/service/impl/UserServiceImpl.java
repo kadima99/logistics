@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectAll(Integer delMark, String keyword, Integer priority, Integer warehouseId, Integer offset) {
         String sql = "SELECT * FROM user where del_mark = " + delMark + " AND priority != 1";
-        System.out.println(warehouseId);
         if (!keyword.equals("")) {
             sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
         }
@@ -77,6 +76,12 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByWarehouseIdCountPage(warehouseId);
     }
 
+
+    @Override
+    public List<User> selectByWarehouseIdAndPriority(Integer warehouseId, Integer priority) {
+        return userMapper.selectByWarehouseIdAndPriority(warehouseId, priority);
+    }
+
     @Override
     public User selectById(Integer id) {
         return userMapper.selectById(id);
@@ -99,7 +104,8 @@ public class UserServiceImpl implements UserService {
             Integer id = userId.get(i).intValue();
             User user = userMapper.selectById(id);
             user.setPassword("123456");
-            if (userMapper.update(user).equals("修改成功")) {
+            if (userMapper.update(user)) {
+                System.out.println("come in");
                 map.put("result", true);
             } else map.put("result", false);
         }

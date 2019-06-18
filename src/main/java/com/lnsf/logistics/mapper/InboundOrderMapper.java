@@ -25,7 +25,13 @@ public interface InboundOrderMapper {
     Integer countByWarehouseId(Integer id);
 
     @Select("SELECT * FROM inbound_order WHERE inbound_order_id = #{id}")
-    InboundOrder selectById(Integer id);
+    List<InboundOrder> selectById(Integer id);
+
+    @Select("SELECT inbound_order_id from inbound_order WHERE warehouse_id = #{id} group by inbound_order_id LIMIT #{offset},8")
+    List<Integer> getInboundOrderIdByWarehouseId(Integer id,Integer offset);
+
+    @Select("SELECT count(inbound_order_id) from inbound_order WHERE warehouse_id = #{id} group by inbound_order_id ")
+    Integer countInboundOrderIdByWarehouseId(Integer id);
 
     @Insert("INSERT inbound_order VALUES(#{inboundOrderId},#{orderId},#{warehouseId},now(),#{delMark})")
     Boolean insert(InboundOrder inboundOrder);

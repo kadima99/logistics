@@ -17,7 +17,11 @@ public interface InboundOrderService {
 
     Integer countByWarehouseId(Integer id);
 
-    InboundOrder selectById(Integer id);
+    List<InboundOrder> selectById(Integer id);
+
+    List<Integer> getInboundOrderIdByWarehouseId(Integer id,Integer offset);
+
+    Integer countInboundOrderIdByWarehouseId(Integer id);
 
     Map<String,Object> insert(List<Long> orders, Integer warehouseId) throws ParseException;
 

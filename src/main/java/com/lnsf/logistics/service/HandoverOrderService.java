@@ -9,13 +9,19 @@ public interface HandoverOrderService {
 
     List<HandoverOrder> selectAll();
 
-    List<HandoverOrder> selectByHandoverOrderId(Integer id, Integer offset);
+    List<HandoverOrder> selectByHandoverOrderId(Integer id);
 
-    List<HandoverOrder> selectByUserId(Integer id, Integer offset);
+    List<HandoverOrder> selectByUserIdAndStatus(Integer keyword,Integer userId, Integer status);
 
     HandoverOrder selectByOutboundId(Integer id);
 
-    Map<String, Object> insert(Integer userId, Integer[] outboundIds);
+    List<Integer> getHandoverOrderIdByUserId(Integer id,Integer offset);
+
+    Integer countHandoverOrderIdByUserId(Integer id);
+
+    Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds,Integer linId);
+
+    Map<String, Object> outboundInsert(Integer userId, Integer[] outboundIds,Integer warehouseId);
 
     Map<String, Object> update(HandoverOrder handoverOrder);
 

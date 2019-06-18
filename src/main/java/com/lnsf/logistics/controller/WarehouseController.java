@@ -1,5 +1,6 @@
 package com.lnsf.logistics.controller;
 
+import com.lnsf.logistics.entity.User;
 import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.service.LocationsService;
 import com.lnsf.logistics.service.WarehouseService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,29 +54,34 @@ public class WarehouseController {
     @RequestMapping("/add")
     public Map<String, Object> add(String name, Integer userId, Integer level, Float maxWeight, String address) {
         Map<String, Object> map = new HashMap<String, Object>();
-        if (warehouseService.insert(name,userId,level,maxWeight,address).equals("插入成功")) {
+        if (warehouseService.insert(name, userId, level, maxWeight, address).equals("插入成功")) {
             map.put("result", true);
-        } else map.put("result", warehouseService.insert(name,userId,level,maxWeight,address));
+        } else map.put("result", warehouseService.insert(name, userId, level, maxWeight, address));
         return map;
 
     }
 
     @RequestMapping("/update")
-    public Map<String, Object> update(String name, Integer userId, Integer level, Float maxWeight, String address){
+    public Map<String, Object> update(Integer updateId,String name, Integer userId, Integer level, Float maxWeight, String address, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<String, Object>();
-        Warehouse warehouse = warehouseService.selectById(userId);
-        warehouse.setName(name);
-        warehouse.setLevel(level);
-        warehouse.setMaxWeight(maxWeight);
-        warehouse.setAddress(address);
-        if (warehouseService.update(warehouse).equals("更新成功")){
-            map.put("result",true);
-        }else map.put("result",warehouseService.update(warehouse));
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        System.out.println(name);
+        if (user != null) {
+            Warehouse warehouse = warehouseService.selectById(updateId);
+            warehouse.setName(name);
+            warehouse.setLevel(level);
+            warehouse.setMaxWeight(maxWeight);
+            warehouse.setAddress(address);
+            if (warehouseService.update(warehouse).equals("更新成功")) {
+                map.put("result", true);
+            } else map.put("result", warehouseService.update(warehouse));
+        }
         return map;
 
     }
 
-        @RequestMapping("/getByArea")
+    @RequestMapping("/getByArea")
     public List<Warehouse> getByArea() {
         Integer area = 308;
         return warehouseService.selectByArea(area);

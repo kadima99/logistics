@@ -4,6 +4,7 @@ import com.lnsf.logistics.entity.InboundOrder;
 import com.lnsf.logistics.entity.Orders;
 import com.lnsf.logistics.mapper.InboundOrderMapper;
 import com.lnsf.logistics.service.InboundOrderService;
+import com.lnsf.logistics.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,8 @@ public class InboundOrderServiceImpl implements InboundOrderService {
 
     @Autowired
     private InboundOrderMapper inboundOrderMapper;
+    @Autowired
+    private OrdersService ordersService;
 
     @Override
     public List<InboundOrder> selectAll() {
@@ -38,12 +41,22 @@ public class InboundOrderServiceImpl implements InboundOrderService {
     }
 
     @Override
+    public List<Integer> getInboundOrderIdByWarehouseId(Integer id,Integer offset){
+        return inboundOrderMapper.getInboundOrderIdByWarehouseId(id,offset);
+    }
+
+    @Override
+    public Integer countInboundOrderIdByWarehouseId(Integer id){
+        return inboundOrderMapper.countInboundOrderIdByWarehouseId(id);
+    }
+
+    @Override
     public Integer countByWarehouseId(Integer id) {
         return inboundOrderMapper.countByWarehouseId(id);
     }
 
     @Override
-    public InboundOrder selectById(Integer id) {
+    public List<InboundOrder> selectById(Integer id) {
         return inboundOrderMapper.selectById(id);
     }
 
@@ -51,9 +64,22 @@ public class InboundOrderServiceImpl implements InboundOrderService {
     public Map<String, Object> insert(List<Long> orders, Integer warehouseId){
         Map<String, Object> map = new HashMap<String, Object>();
         Integer flag = 0;
+        Integer inboundOrderId = 0;
         for (Long orderId : orders) {
-            inboundOrderMapper.insert(new InboundOrder(orderId.intValue(), warehouseId, 0));
-            flag++;
+            Orders order = ordersService.selectByOrdersId(orderId.intValue());
+            order.setStatus(0);
+            ordersService.setEndWarehouse(order.getOrderId());
+            ordersService.update(order);
+            if (flag.equals(0)){
+                if (inboundOrderMapper.insert(new InboundOrder(orderId.intValue(),warehouseId,0))){
+                    flag ++;
+                }
+                List<InboundOrder> inboundOrders = inboundOrderMapper.selectByOrderId(orderId.intValue());
+                inboundOrderId = inboundOrders.get(inboundOrders.size()-1).getInboundOrderId();
+            }
+            else if (inboundOrderMapper.insert(new InboundOrder(inboundOrderId,orderId.intValue(), warehouseId, 0))){
+                flag++;
+            }
         }
         if (flag.equals(orders.size())) {
             map.put("result", true);

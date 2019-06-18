@@ -18,11 +18,17 @@ public interface OutboundOrderService {
 
     Integer countByWarehouseId(Integer id);
 
-    OutboundOrder selectById(Integer id);
+    List<OutboundOrder> selectById(Integer id);
 
-    Map<String, Object> insert(List<Long> orders, Integer warehouseId, Integer nextWarehouseId);
+    OutboundOrder selectByOrderIdAnd(Integer id,Integer delMark);
 
-    Map<String, Object> update(OutboundOrder inboundOrder);
+    List<Integer> getOutboundOrderIdByWarehouseId(Integer id,Integer offset);
+
+    Integer countOutboundOrderIdByWarehouseId(Integer id);
+
+    Boolean insert(List<Long> orders, Integer warehouseId, Integer nextWarehouseId);
+
+    Boolean update(OutboundOrder inboundOrder);
 
     Map<String, Object> delete(Integer id);
 }

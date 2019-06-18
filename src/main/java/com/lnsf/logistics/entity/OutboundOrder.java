@@ -1,6 +1,9 @@
 package com.lnsf.logistics.entity;
 
-import java.util.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class OutboundOrder {
     private Integer outboundOrderId;
@@ -8,7 +11,7 @@ public class OutboundOrder {
     private Integer nextWarehouseId;
     private Integer orderId;
     private Integer delMark;
-    private Date createDate;
+    private Timestamp createDate;
 
     public Integer getOutboundOrderId() {
         return outboundOrderId;
@@ -50,33 +53,30 @@ public class OutboundOrder {
         this.delMark = delMark;
     }
 
-    public Date getCreateDate() {
+    public Timestamp  getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
     public OutboundOrder() {
     }
 
-    public OutboundOrder(Integer outboundOrderId, Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer delMark, Date createDate) {
+    public OutboundOrder(Integer outboundOrderId, Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer delMark) {
         this.outboundOrderId = outboundOrderId;
         this.warehouseId = warehouseId;
         this.nextWarehouseId = nextWarehouseId;
         this.orderId = orderId;
         this.delMark = delMark;
-        this.createDate = createDate;
     }
 
     public OutboundOrder(Integer warehouseId, Integer nextWarehouseId, Integer orderId, Integer delMark) {
-        this.outboundOrderId = outboundOrderId;
         this.warehouseId = warehouseId;
         this.nextWarehouseId = nextWarehouseId;
         this.orderId = orderId;
         this.delMark = delMark;
-        this.createDate = createDate;
     }
 
 

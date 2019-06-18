@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.lnsf.logistics.Enum.CustomerStatus.*;
 
@@ -19,35 +21,35 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerMapper customerMapper;
 
     @Override
-    public List<Customer> selectAll(Integer delMark,String keyword,Integer status,Integer offset) {
-        String sql ="SELECT * FROM customer WHERE del_mark= " + delMark;
-        if (keyword == null){
+    public List<Customer> selectAll(Integer delMark, String keyword, Integer status, Integer offset) {
+        String sql = "SELECT * FROM customer WHERE del_mark= " + delMark;
+        if (keyword == null) {
             keyword = "";
         }
 
-        if (!keyword.equals("")){
+        if (!keyword.equals("")) {
             sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
         }
-        if (status != null){
+        if (status != null) {
             sql += " AND status = " + status;
         }
-        if (offset != null){
+        if (offset != null) {
             sql += " LIMIT " + offset + ",8";
         }
         return customerMapper.selectAll(sql);
     }
 
     @Override
-    public Integer selectAllCountPage(Integer delMark,String keyword,Integer status){
-        String sql ="SELECT count(customer_id) FROM customer WHERE del_mark= " + delMark;
-        if (keyword == null){
+    public Integer selectAllCountPage(Integer delMark, String keyword, Integer status) {
+        String sql = "SELECT count(customer_id) FROM customer WHERE del_mark= " + delMark;
+        if (keyword == null) {
             keyword = "";
         }
 
-        if (!keyword.equals("")){
+        if (!keyword.equals("")) {
             sql += " AND (name like \"%" + keyword + "%\" or account like  \"%" + keyword + "%\")";
         }
-        if (status != null){
+        if (status != null) {
             sql += " AND status = " + status;
         }
         return customerMapper.selectAllCountPage(sql);
@@ -66,8 +68,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String login(String account, String password) {
-        if (customerMapper.selectByAccount(account) != null) {
-            if (customerMapper.selectByAccount(account).getStatus().equals(FORBID)) {
+        if (customerMapper.selectByAccount(account) != null && customerMapper.selectByAccount(account).getDelMark().equals(0)) {
+            System.out.println(customerMapper.selectByAccount(account).getStatus());
+            System.out.println(FORBID.getCode());
+            if (customerMapper.selectByAccount(account).getStatus().equals(FORBID.getCode())) {
+
                 return "你的账号已经被封禁！请联系客服寻求帮助！";
             } else if (customerMapper.selectByAccountAndPassword(account, password) != null) {
                 return "登陆成功";
@@ -78,26 +83,45 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer selectByAccount(String account) {
+        return customerMapper.selectByAccount(account);
+    }
+
+    @Override
     public Customer selectById(Integer id) {
         return customerMapper.selectById(id);
     }
 
     @Override
-    public Boolean forbidById(Integer id){
-        Customer customer = customerMapper.selectById(id);
-        customer.setStatus(FORBID.getCode());
-        return customerMapper.update(customer);
+    public Map<String, Object> forbidById(List<Long> customerId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < customerId.size(); i++) {
+            Integer id = customerId.get(i).intValue();
+            Customer customer = customerMapper.selectById(id);
+            customer.setStatus(FORBID.getCode());
+            if (customerMapper.update(customer)) {
+                map.put("result", true);
+            } else map.put("result", false);
+        }
+        return map;
     }
 
     @Override
-    public Boolean recoverById(Integer id){
-        Customer customer = customerMapper.selectById(id);
-        customer.setStatus(IS_USING.getCode());
-        return customerMapper.update(customer);
+    public Map<String, Object> recoverById(List<Long> customerId) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (int i = 0; i < customerId.size(); i++) {
+            Integer id = customerId.get(i).intValue();
+            Customer customer = customerMapper.selectById(id);
+            customer.setStatus(IS_USING.getCode());
+            if (customerMapper.update(customer)) {
+                map.put("result", true);
+            } else map.put("result", false);
+        }
+        return map;
     }
 
     @Override
-    public Boolean resetPassword(Integer id ){
+    public Boolean resetPassword(Integer id) {
         Customer customer = customerMapper.selectById(id);
         customer.setPassword("123456");
         return customerMapper.update(customer);
@@ -105,8 +129,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String insert(Customer record) {
+        System.out.println(record.getAccount());
         if (customerMapper.selectByAccount(record.getAccount()) != null) {
             return "该用户已存在！";
+        } else if (customerMapper.selectByPhone(record.getPhone()) != null) {
+            return "该手机号已经被注册";
         } else if (customerMapper.insert(record)) {
             return "插入成功";
         } else return "插入失败";

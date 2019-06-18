@@ -3,6 +3,7 @@ package com.lnsf.logistics.service;
 import com.lnsf.logistics.entity.Customer;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CustomerService {
 
@@ -16,11 +17,13 @@ public interface CustomerService {
 
     List<Customer> selectByName(String name, Integer offset);
 
+    Customer selectByAccount(String account);
+
     Customer selectById(Integer id);
 
-    Boolean forbidById(Integer id);
+    Map<String, Object> forbidById(List<Long> customerId);
 
-    Boolean recoverById(Integer id);
+    Map<String, Object> recoverById(List<Long> customerId);
 
     Boolean resetPassword(Integer id);
 

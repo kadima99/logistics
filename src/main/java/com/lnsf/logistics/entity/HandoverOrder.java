@@ -1,13 +1,15 @@
 package com.lnsf.logistics.entity;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class HandoverOrder {
     private Integer handoverOrderId;
     private Integer userId;
     private Integer outboundId;
     private Integer delMark;
-    private Date createDate;
+    private Timestamp createDate;
+    private Integer warehouseId;
 
 
     public Integer getHandoverOrderId() {
@@ -42,21 +44,40 @@ public class HandoverOrder {
         this.delMark = delMark;
     }
 
-    public Date getCreateDate() {
+
+    public Integer getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
     public HandoverOrder() {
     }
 
-    public HandoverOrder(Integer userId, Integer outboundId, Integer delMark) {
+    public HandoverOrder(Integer userId, Integer outboundId, Integer warehouseId,Integer delMark) {
 
         this.userId = userId;
         this.outboundId = outboundId;
+        this.warehouseId = warehouseId;
+        this.delMark = delMark;
+
+    }
+
+    public HandoverOrder(Integer handoverOrderId,Integer userId, Integer outboundId,Integer warehouseId, Integer delMark) {
+        this.handoverOrderId = handoverOrderId;
+        this.userId = userId;
+        this.outboundId = outboundId;
+        this.warehouseId = warehouseId;
         this.delMark = delMark;
 
     }
@@ -69,6 +90,7 @@ public class HandoverOrder {
                 ", outboundId=" + outboundId +
                 ", delMark=" + delMark +
                 ", createDate=" + createDate +
+                ", warehouseId=" + warehouseId +
                 '}';
     }
 }

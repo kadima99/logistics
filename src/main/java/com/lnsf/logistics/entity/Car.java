@@ -9,7 +9,7 @@ public class Car {
     private Integer level;
     private Integer lineId;
     private Integer warehouseId;
-    private Integer delMark;
+    private Integer nowWarehouseId;
 
     public Integer getCarId() {
         return carId;
@@ -75,18 +75,18 @@ public class Car {
         this.warehouseId = warehouseId;
     }
 
-    public Integer getDelMark() {
-        return delMark;
+    public Integer getNowWarehouseId() {
+        return nowWarehouseId;
     }
 
-    public void setDelMark(Integer delMark) {
-        this.delMark = delMark;
+    public void setNowWarehouseId(Integer nowWarehouseId) {
+        this.nowWarehouseId = nowWarehouseId;
     }
 
     public Car() {
     }
 
-    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status,Integer level,Integer lineId, Integer warehouseId,Integer delMark) {
+    public Car(Integer carId, Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer level, Integer lineId, Integer warehouseId, Integer nowWarehouseId) {
         this.carId = carId;
         this.userId = userId;
         this.maxWeight = maxWeight;
@@ -95,18 +95,18 @@ public class Car {
         this.level = level;
         this.lineId = lineId;
         this.warehouseId = warehouseId;
-        this.delMark = delMark;
+        this.nowWarehouseId = nowWarehouseId;
+
     }
 
-    public Car(Integer userId, Float maxWeight, Float residueWeight, Integer status, Integer level,Integer lineId, Integer warehouseId,Integer delMark) {
-        this.userId = userId;
+    public Car(Float maxWeight, Float residueWeight, Integer status, Integer level, Integer warehouseId,Integer nowWarehouseId) {
         this.maxWeight = maxWeight;
         this.residueWeight = residueWeight;
         this.status = status;
         this.level = level;
         this.warehouseId = warehouseId;
-        this.lineId = lineId;
-        this.delMark = delMark;
+        this.nowWarehouseId = nowWarehouseId;
+
     }
 
     @Override
@@ -116,11 +116,11 @@ public class Car {
                 ", userId=" + userId +
                 ", maxWeight=" + maxWeight +
                 ", residueWeight=" + residueWeight +
-                ",status=" + status +
-                ",level=" + level +
-                ",lineId=" + lineId +
-                ",warehouseId=" + warehouseId +
-                ", delMark=" + delMark +
+                ", status=" + status +
+                ", level=" + level +
+                ", lineId=" + lineId +
+                ", warehouseId=" + warehouseId +
+                ", nowWarehouseId=" + nowWarehouseId +
                 '}';
     }
 }

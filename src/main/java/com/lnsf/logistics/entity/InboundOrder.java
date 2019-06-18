@@ -1,13 +1,15 @@
 package com.lnsf.logistics.entity;
 
-import java.util.Date;
+
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class InboundOrder {
     private Integer inboundOrderId;
     private Integer orderId;
     private Integer warehouseId;
     private Integer delMark;
-    private Date createDate;
+    private Timestamp createDate;
 
     public Integer getInboundOrderId() {
         return inboundOrderId;
@@ -41,26 +43,25 @@ public class InboundOrder {
         this.delMark = delMark;
     }
 
-    public Date getCreateDate() {
+    public Timestamp  getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
     public InboundOrder() {
     }
 
-    public InboundOrder(Integer inboundOrderId, Integer orderId, Integer warehouseId, Integer delMark, Date createDate) {
+    public InboundOrder(Integer inboundOrderId, Integer orderId, Integer warehouseId, Integer delMark) {
         this.inboundOrderId = inboundOrderId;
         this.orderId = orderId;
         this.warehouseId = warehouseId;
         this.delMark = delMark;
-        this.createDate = createDate;
     }
 
-    public InboundOrder( Integer orderId, Integer warehouseId, Integer delMark) {
+    public InboundOrder(Integer orderId, Integer warehouseId, Integer delMark) {
         this.orderId = orderId;
         this.warehouseId = warehouseId;
         this.delMark = delMark;

@@ -1,12 +1,10 @@
 package com.lnsf.logistics.service.impl;
 
 import com.lnsf.logistics.entity.Car;
-import com.lnsf.logistics.entity.CarInfo;
 import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.mapper.CarMapper;
 import com.lnsf.logistics.mapper.UserMapper;
 import com.lnsf.logistics.mapper.WarehouseMapper;
-import com.lnsf.logistics.service.CarInfoService;
 import com.lnsf.logistics.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.lnsf.logistics.Enum.CarStatus.GIFT;
 import static com.lnsf.logistics.Enum.CarStatus.IS_BUSY;
 
 @Service
@@ -34,13 +33,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> selectByWarehouseId(Integer id, Integer level, Integer status, Integer offset) {
+    public List<Car> selectByWarehouseId(Integer keyword, Integer id, Integer level, Integer status, Integer offset) {
         String sql = "SELECT * FROM car WHERE warehouse_id = " + id + " ";
         if (level != null) {
             sql += "AND level = " + level + " ";
         }
         if (status != null) {
             sql += "AND status = " + status + " ";
+        } else sql += "AND status != 5 ";
+        if (keyword != null) {
+            sql += "AND car_id = " + keyword + " ";
         }
         if (offset != null) {
             sql += "LIMIT " + offset + ",8";
@@ -49,23 +51,31 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public Integer countByWarehouseId(Integer keyword, Integer id, Integer level, Integer status) {
+        String sql = "SELECT count(car_id) FROM car WHERE warehouse_id = " + id + " ";
+        if (level != null) {
+            sql += "AND level = " + level + " ";
+        }
+        if (status != null) {
+            sql += "AND status = " + status + " ";
+        } else sql += "AND status != 5 ";
+        if (keyword != null) {
+            sql += "AND car_id = " + keyword + " ";
+        }
+        return carMapper.countByWarehouseId(sql);
+    }
+
+
+    @Override
     public Car selectById(Integer id) {
         return carMapper.selectById(id);
     }
 
     @Override
     public String insert(Car car) {
-        if (userMapper.selectById(car.getUserId()) == null) {
-            return "查无此人！";
-        } else if (warehouseMapper.selectById(car.getWarehouseId()) == null){
-           return "请选择正确的仓库";
-        }  else if (carMapper.selectByUserId(car.getUserId()) != null) {
-            return "该司机已经分配车辆了！";
-        } else if (car.getMaxWeight() == null) {
+         if (car.getMaxWeight() == null) {
             return "车辆最大重量不能为空！";
         } else if (carMapper.insert(car)) {
-            CarInfo carInfo = new CarInfo();
-            carInfo.setCarId(car.getUserId());
             return "插入成功";
         } else return "插入失败";
 
@@ -74,13 +84,13 @@ public class CarServiceImpl implements CarService {
     @Override
     public String update(Car car) {
         if (carMapper.selectById(car.getCarId()) != null) {
-            if (carMapper.selectById(car.getCarId()).getDelMark().equals(0)) {
+            if (!carMapper.selectById(car.getCarId()).getStatus().equals(GIFT.getCode())) {
                 if (userMapper.selectById(car.getUserId()) == null) {
                     return "查无此人！";
                 } else if (carMapper.selectByUserId(car.getUserId()) != null && !carMapper.selectByUserId(car.getUserId()).getCarId().equals(car.getCarId())) {
                     return "该司机已经分配车辆了！";
                 } else if (carMapper.selectById(car.getCarId()).getStatus().equals(IS_BUSY.getCode())) {
-                    return "请确保该车辆不在工作状态再删除！";
+                    return "请确保该车辆不在工作状态再进行更新！";
                 } else if (car.getMaxWeight() == null) {
                     return "车辆最大重量不能为空！";
                 } else if (car.getResidueWeight() > car.getMaxWeight()) {
@@ -97,7 +107,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public String delete(Integer id) {
         if (carMapper.selectById(id) != null) {
-            if (carMapper.selectById(id).getDelMark() == 1) {
+            if (carMapper.selectById(id).getStatus().equals(GIFT.getCode())) {
                 return "该车辆已经删除！请勿重复操作";
             } else if (carMapper.selectById(id).getStatus().equals(IS_BUSY.getCode())) {
                 return "请确保该车辆不在工作状态再删除！";

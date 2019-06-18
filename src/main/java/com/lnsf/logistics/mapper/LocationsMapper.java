@@ -22,6 +22,9 @@ public interface LocationsMapper {
     @Select("SELECT * FROM locations WHERE name = #{name}")
     Locations selectByName(String name);
 
+    @Select("SELECT * FROM locations WHERE name = #{name} AND parent_id = #{parentId}")
+    Locations selectByNameAndParentId(String name,Integer parentId);
+
     @Select("SELECT * FROM locations WHERE id = #{id}")
     Locations selectById(Integer id);
 

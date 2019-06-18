@@ -11,7 +11,9 @@ public interface CarService {
 
     List<Car> selectAll();
 
-    List<Car> selectByWarehouseId(Integer id,Integer level,Integer status,Integer offset);
+    List<Car> selectByWarehouseId(Integer keyword,Integer id,Integer level,Integer status,Integer offset);
+
+    Integer countByWarehouseId(Integer keyword,Integer id, Integer level, Integer status);
 
     Car selectById(Integer id);
 

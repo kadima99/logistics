@@ -25,6 +25,9 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE warehouse_id = #{warehouseId} ")
     List<User> selectByWarehouseId(Integer warehouseId);
 
+    @Select("SELECT * FROM user WHERE warehouse_id = #{warehouseId} AND priority = #{priority}")
+    List<User> selectByWarehouseIdAndPriority(Integer warehouseId,Integer priority);
+
     @Select("SELECT count(*) FROM user WHERE warehouse_id = #{warehouseId} ")
     Integer selectByWarehouseIdCountPage(Integer warehouseId);
 

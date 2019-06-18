@@ -134,6 +134,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     public String update(Warehouse warehouse) {
+        System.out.println(warehouseMapper.selectByName(warehouse.getName()).getWarehouseId());
+        System.out.println(warehouse.getWarehouseId());
+        System.out.println(warehouseMapper.selectByName(warehouse.getName()).getWarehouseId().equals(warehouse.getWarehouseId()));
         if (userMapper.selectById(warehouse.getUserId()) != null) {
             if (warehouseMapper.selectByUserId(warehouse.getUserId()) != null && !warehouseMapper.selectByUserId(warehouse.getUserId()).getWarehouseId().equals(warehouse.getWarehouseId())) {
                 return "该员工已是管理员！";

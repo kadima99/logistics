@@ -1,6 +1,7 @@
 package com.lnsf.logistics.controller;
 
 import com.lnsf.logistics.entity.Car;
+import com.lnsf.logistics.entity.User;
 import com.lnsf.logistics.service.CarService;
 import com.lnsf.logistics.service.UserService;
 import com.lnsf.logistics.service.impl.CarServiceImpl;
@@ -12,7 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.lnsf.logistics.Enum.CarStatus.GIFT;
+import static com.lnsf.logistics.Enum.CarStatus.NO_BUSY;
 
 @RestController
 @RequestMapping("/car")
@@ -23,70 +31,62 @@ public class CarController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/getAll")
-    public String getAll() throws JSONException {
-        int page = 1;
-        int offset = (page - 1) * 8;
-        // return carService.selectAll(offset);
-
-        List<Car> lc = carService.selectAll();
-        JSONObject jsonObject1 = new JSONObject();
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < lc.size(); i++) {
-            JSONObject jsonObject = new JSONObject();
-            String name = userService.selectById(lc.get(i).getUserId()).getName();
-            try {
-                jsonObject.put("carId", lc.get(i).getCarId());
-                jsonObject.put("userName", name);
-                jsonObject.put("maxWeight", lc.get(i).getMaxWeight());
-                jsonObject.put("residueWeight", lc.get(i).getResidueWeight());
-                jsonObject.put("status", lc.get(i).getStatus());
-                jsonObject.put("delMark", lc.get(i).getDelMark());
-                array.put(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    @RequestMapping("/getHistoryLocal")
+    public Map<String, Object> getHistoryLocal(Integer keyword,Integer page, Integer level, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Integer offset = (page - 1) * 8;
+        if (user != null) {
+            List<Car> cars = carService.selectByWarehouseId(keyword,user.getWarehouseId(), level, GIFT.getCode(), offset);
+            map.put("carData",cars);
+            map.put("totalPage",Math.ceil(carService.countByWarehouseId(keyword,user.getWarehouseId(),level, GIFT.getCode()).doubleValue() / 8.0));
         }
-        jsonObject1.put("date",array);
-        jsonObject1.put("aa",1);
-        return jsonObject1.toString();
-
-
+        return map;
     }
 
-    @RequestMapping("/getById")
-    public Car getById() {
-        int page = 1;
-        int offset = (page - 1) * 8;
-        int id = 2;
-        return carService.selectById(id);
+    @RequestMapping("/getLocal")
+    public Map<String, Object> getLocal(Integer keyword,Integer page, Integer level, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        Integer offset = (page - 1) * 8;
+        if (user != null) {
+            List<Car> cars = carService.selectByWarehouseId(keyword,user.getWarehouseId(), level, null, offset);
+            map.put("carData",cars);
+            map.put("totalPage",Math.ceil(carService.countByWarehouseId(keyword,user.getWarehouseId(),level, null).doubleValue() / 8.0));
+        }
+        return map;
     }
-
-//    @RequestMapping("/add")
-//    public String add() {
-//        Integer userId = 3;
-//        Float maxWeight = 1000f;
-//        Float residueWeight = 800f;
-//        Integer status = 1;
-//        Integer delMark = 0;
-//        return carService.insert(new Car(userId, maxWeight, residueWeight, status, delMark));
-//    }
-//
-//    @RequestMapping("/update")
-//    public String update() {
-//        Integer id = 2;
-//        Integer userId = 3;
-//        Float maxWeight = 2000f;
-//        Float residueWeight = 800f;
-//        Integer status = 1;
-//        Integer delMark = 0;
-//        return carService.update(new Car(id, userId, maxWeight, residueWeight, status, delMark));
-//    }
 
     @RequestMapping("/delete")
-    public String delete() {
-        int id = 2;
-        return carService.delete(id);
+    public Map<String, Object> delete(Integer carId, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            Car car = carService.selectById(carId);
+            car.setStatus(GIFT.getCode());
+           if (carService.update(car).equals("更新成功")){
+               map.put("result",true);
+           }else map.put("result",carService.update(car));
+        }
+        return map;
     }
+
+    @RequestMapping("/add")
+    public Map<String, Object> add(Integer level,Float maxWeight, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            Car car =new Car(maxWeight,maxWeight, NO_BUSY.getCode(),level,user.getWarehouseId(),user.getWarehouseId());
+            if (carService.insert(car).equals("插入成功")){
+                map.put("result",true);
+            }else map.put("result",carService.insert(car));
+        }
+        return map;
+    }
+
 
 }

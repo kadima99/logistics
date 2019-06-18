@@ -10,6 +10,8 @@ public class Customer {
     private Integer status;
     private Integer delMark;
 
+
+
     public Integer getStatus() {
         return status;
     }
@@ -19,11 +21,11 @@ public class Customer {
     }
 
     public Integer getDelMark() {
-        return status;
+        return delMark;
     }
 
-    public void setDelMark(Integer status) {
-        this.status = status;
+    public void setDelMark(Integer delMark) {
+        this.delMark = delMark;
     }
 
     public Integer getCustomerId() {
@@ -69,21 +71,23 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(Integer customerId, String account, String password, String name, String phone, Integer status,Integer delMark) {
+    public Customer(Integer customerId, String account, String name, String password, String phone, Integer status, Integer delMark) {
         this.customerId = customerId;
         this.account = account;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.status = status;
+        this.delMark = delMark;
     }
 
-    public Customer(String account, String password, String name, String phone, Integer status,Integer delMark) {
+    public Customer(String account, String name, String password, String phone, Integer status, Integer delMark) {
         this.account = account;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.status = status;
+        this.delMark = delMark;
     }
 
     @Override
@@ -94,8 +98,8 @@ public class Customer {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
-                ", status='" + status + '\'' +
-                ", status='" + delMark + '\'' +
+                ", status='" + status +
+                ", delMark='" + delMark +
 
                 '}';
     }

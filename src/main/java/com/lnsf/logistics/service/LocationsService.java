@@ -15,6 +15,8 @@ public interface LocationsService {
 
     List<Locations> selectByParentId(Integer id);
 
+    Locations selectByNameAndParentId(String name,Integer id);
+
     Map<String,Object> selectLocationsByAddress(String address);
 
 }

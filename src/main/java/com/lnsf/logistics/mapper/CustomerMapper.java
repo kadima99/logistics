@@ -27,16 +27,19 @@ public interface CustomerMapper {
     @Select("SELECT * FROM customer WHERE account = #{account}")
     Customer selectByAccount(String account);
 
+    @Select("SELECT * FROM customer WHERE phone = #{phone}")
+    Customer selectByPhone(String phone);
+
     @Select("SELECT * FROM customer WHERE customer_id = #{id}")
     Customer selectById(Integer id);
 
-    @Insert("INSERT customer VALUES(#{customerId},#{account},#{name},#{password},#{phone},#{status})")
+    @Insert("INSERT customer VALUES(#{customerId},#{account},#{name},#{password},#{phone},#{status},#{delMark})")
     Boolean insert(Customer record);
 
-    @Update("UPDATE customer SET account = #{account},name = #{name},password = #{password},phone = #{phone},status = #{status} WHERE customer_id = #{customerId}")
+    @Update("UPDATE customer SET account = #{account},name = #{name},password = #{password},phone = #{phone},status = #{status}, del_mark = #{delMark} WHERE customer_id = #{customerId}")
     Boolean update(Customer record);
 
-    @Delete("DELETE FROM customer WHERE customer_id = #{id}")
+    @Update("UPDATE customer SET  del_mark = 1 WHERE customer_id = #{customerId}")
     Boolean deleteById(Integer id);
 
 
