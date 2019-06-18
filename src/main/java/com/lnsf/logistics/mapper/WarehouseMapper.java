@@ -45,5 +45,4 @@ public interface WarehouseMapper {
     Boolean update(Warehouse warehouse);
 
 
-
 }

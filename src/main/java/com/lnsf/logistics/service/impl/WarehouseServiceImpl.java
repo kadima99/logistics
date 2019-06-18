@@ -79,7 +79,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseMapper.selectAllWarehouseBrief();
     }
 
-    public List<Warehouse> selectByArea(Integer area) { //拿到这个区域的所有仓库（第一个为中心仓库）
+    public List<Warehouse> selectByArea(Integer area) { //拿到这个区域的所有仓库
         List<Warehouse> allWarehouse = new ArrayList<>();
         if (locationsService.selectByParentId(area) != null) {
             List<Locations> locations = locationsService.selectByParentId(area);

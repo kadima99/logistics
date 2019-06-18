@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/line")
@@ -45,6 +47,17 @@ public class LineController {
         return lineService.selectById(id);
     }
 
+    @RequestMapping("/test")
+    public Map<String,Object> test(Integer sid,Integer eid) {
+//        return lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,eid);
+//        return lineService.getRouteByCenterWarehouse(1);
+        Map <String,Object> eMap = new HashMap<>();
+        Map <String,Object> map = new HashMap<>();
+        eMap = lineService.getEndWarehouseId(sid);
+        map = lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,Integer.parseInt(eMap.get("endWarehouseId").toString()));
+        return map;
+    }
+
     public Boolean insert(Line line) {
         return null;
     }
@@ -56,4 +69,6 @@ public class LineController {
     public Boolean delete(Integer id) {
         return null;
     }
+
+
 }
