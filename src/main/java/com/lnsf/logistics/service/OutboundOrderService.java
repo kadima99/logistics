@@ -1,5 +1,6 @@
 package com.lnsf.logistics.service;
 
+import com.lnsf.logistics.entity.Orders;
 import com.lnsf.logistics.entity.OutboundOrder;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -14,6 +15,8 @@ public interface OutboundOrderService {
 
     List<OutboundOrder> selectByOrderId(Integer id);
 
+    Integer[] selectByNextWarehouseIdAndDelMark(Integer id,Integer delMark);
+
     List<OutboundOrder> selectByWarehouseId(Integer id, Integer offset);
 
     Integer countByWarehouseId(Integer id);
@@ -26,7 +29,7 @@ public interface OutboundOrderService {
 
     Integer countOutboundOrderIdByWarehouseId(Integer id);
 
-    Boolean insert(List<Long> orders, Integer warehouseId, Integer nextWarehouseId);
+    Boolean insert(List<Orders> orders, Integer warehouseId, Integer nextWarehouseId);
 
     Boolean update(OutboundOrder inboundOrder);
 

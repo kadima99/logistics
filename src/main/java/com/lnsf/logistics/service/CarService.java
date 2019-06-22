@@ -17,6 +17,8 @@ public interface CarService {
 
     Car selectById(Integer id);
 
+    Car selectByUserId(Integer id);
+
     String insert(Car car);
 
     String update(Car car);

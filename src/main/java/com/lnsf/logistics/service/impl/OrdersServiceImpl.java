@@ -48,15 +48,15 @@ public class OrdersServiceImpl implements OrdersService {
     public Map<String, Object> getDetails(Integer id) {
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+        List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         if (selectByOrdersId(id) != null) {
             List<InboundOrder> inboundOrders = inboundOrderService.selectByOrderId(id);
             List<OutboundOrder> outboundOrders = outboundOrderService.selectByOrderId(id);
             //mapList
             for (int i = 0; i < inboundOrders.size(); i++) {
                 //入库
-                Map<String, String> inDetailMap = new HashMap<String, String>();
-                inDetailMap.put("title", inboundOrders.get(i).getCreateDate().toString().substring(0, 19));
+                Map<String, Object> inDetailMap = new HashMap<String, Object>();
+                inDetailMap.put("title", inboundOrders.get(i).getCreateDate());
                 Integer inboundWarehouseId = inboundOrders.get(i).getWarehouseId();
                 String area = locationsService.selectById(warehouseService.selectById(inboundWarehouseId).getArea()).getName();
                 String inDetail = " [ " + area + " ] " + "  快件到达  " + " [ " + warehouseService.selectById(inboundWarehouseId).getName() + " ] ";
@@ -64,8 +64,8 @@ public class OrdersServiceImpl implements OrdersService {
                 mapList.add(inDetailMap);
 
                 //出库
-                Map<String, String> outDetailMap = new HashMap<String, String>();
-                outDetailMap.put("title", outboundOrders.get(i).getCreateDate().toString().substring(0, 19));
+                Map<String, Object> outDetailMap = new HashMap<String, Object>();
+                outDetailMap.put("title", outboundOrders.get(i).getCreateDate());
                 Integer outboundWarehouseId = outboundOrders.get(i).getWarehouseId();
                 Integer nextWarehouseId = outboundOrders.get(i).getNextWarehouseId();
                 String outArea = locationsService.selectById(warehouseService.selectById(outboundWarehouseId).getArea()).getName();
@@ -118,7 +118,10 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public Integer countByWarehouseId(Integer keyword, Integer id, Integer status) {
-        String sql = "SELECT count(order_id) FROM orders where warehouse_id = " + id;
+        String sql = "SELECT count(order_id) FROM orders where 1 = 1";
+        if (id != null){
+            sql += " AND warehouse_id = " + id;
+        }
         if (keyword != null) {
             sql += " AND order_id = " + keyword;
         }
@@ -305,6 +308,7 @@ public class OrdersServiceImpl implements OrdersService {
 //                outboundOrderService.update(outboundOrder);
                 //入库单
                 Orders order = ordersMapper.selectByOrdersId(outboundOrders.get(j).getOrderId());
+                order.setWarehouseId(handoverOrder.getWarehouseId());
                 order.setStatus(WAIT_FOR.getCode());
                 ordersMapper.update(order);
                 flag++;
@@ -312,6 +316,8 @@ public class OrdersServiceImpl implements OrdersService {
             }
         }
         Integer warehouseId = handoverOrderService.selectByHandoverOrderId(handoverOrderId).get(0).getWarehouseId();
+        System.out.println(warehouseId);
+        System.out.println(orders.toString());
         inboundOrderService.insert(orders, warehouseId);
         if (flag == orders.size()) {
             map.put("result", true);
@@ -378,6 +384,7 @@ public class OrdersServiceImpl implements OrdersService {
         Map<String, Object> cusMap = locationsService.selectLocationsByAddress(orders.getCustomerAddress());
         Locations customerLocation = (Locations) cusMap.get("county");
         Integer customerArea = customerLocation.getId();
+        System.out.println(customerArea);
         //这里为开始的区域仓库到中心仓库
         if (warehouseService.selectByAreaAndLevel(customerArea, 1).getWarehouseId().equals(orders.getWarehouseId())) {
             Integer centerAre = customerLocation.getParentId();

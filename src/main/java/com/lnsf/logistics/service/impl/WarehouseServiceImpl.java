@@ -42,7 +42,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             sql += " AND (name like \"%" + keyword + "%\" or warehouse_id like  \"%" + keyword + "%\")";
         }
         if (!city.equals("")) {
-            sql += " AND area like \"%" + city + "%\" ";
+            sql += " AND address like \"%" + city + "%\" ";
         }
         if (offset != null) {
             sql += " LIMIT " + offset + ",8";
@@ -85,7 +85,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             List<Locations> locations = locationsService.selectByParentId(area);
             for (Locations location : locations) {
                 List<Warehouse> warehouses = warehouseMapper.selectByArea(location.getId());
-                if (warehouses != null){
+                if (warehouses != null) {
                     allWarehouse.addAll(warehouses);
                 }
             }
@@ -116,9 +116,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     public String insert(String name, Integer userId, Integer level, Float maxWeight, String address) {
         Map<String, Object> locationsMap = locationsService.selectLocationsByAddress(address);
         Integer area = 0;
-        if (locationsMap.get("flag").equals(3)){
+        if (locationsMap.get("flag").equals(3)) {
             area = (Integer) locationsMap.get("county");
-        }else area = (Integer) locationsMap.get("city");
+        } else area = (Integer) locationsMap.get("city");
         if (userMapper.selectById(userId) != null) {
             if (warehouseMapper.selectByUserId(userId) != null) {
                 return "该员工已是管理员！";

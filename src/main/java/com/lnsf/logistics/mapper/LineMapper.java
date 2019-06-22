@@ -21,6 +21,9 @@ public interface LineMapper {
     @Select("SELECT * FROM line WHERE line_id = #{id}")
     Line selectById(Integer id);
 
+    @Select("SELECT * FROM line WHERE line_summary= #{summary} AND begin_id = #{beginId} AND end_id = #{endId} AND del_mark = 0")
+    Line selectByAll(String summary, Integer beginId, Integer endId);
+
     @Insert("INSERT INTO line VALUES(#{lineId},#{lineSummary},#{beginId},#{endId},#{delMark})")
     Boolean insert(Line line);
 

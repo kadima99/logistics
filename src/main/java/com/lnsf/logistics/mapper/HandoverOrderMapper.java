@@ -28,10 +28,10 @@ public interface HandoverOrderMapper {
     @Select("select count(handover_order_id) from handover_order where user_id=#{id} AND del_mark = 1 group by handover_order_id ")
     Integer countHandoverOrderIdByUserId(Integer id);
 
-    @Insert("INSERT handover_order VALUES(#{handoverOrderId},#{userId},#{outboundId},now(),#{warehouseId},#{delMark})")
+    @Insert("INSERT handover_order VALUES(#{handoverOrderId},#{userId},#{outboundId},now(),#{warehouseId},#{flag},0)")
     Boolean insert(HandoverOrder handoverOrder);
 
-    @Update("UPDATE handover_order SET user_id=#{userId},outbound_id=#{outboundId},create_date=#{createDate},warehouse_id=#{warehouseId},del_mark=#{delMark} WHERE handover_order_id =#{handoverOrderId}")
+    @Update("UPDATE handover_order SET user_id=#{userId},create_date=#{createDate},warehouse_id=#{warehouseId},flag = #{flag},del_mark=#{delMark} WHERE outbound_id=#{outboundId} AND handover_order_id =#{handoverOrderId}")
     Boolean update(HandoverOrder handoverOrder);
 
     Boolean delete(HandoverOrder hangoverOrder);

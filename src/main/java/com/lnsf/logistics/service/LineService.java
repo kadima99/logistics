@@ -15,9 +15,11 @@ public interface LineService {
 
     List<Line> selectByBeginIdEndId(Integer beginId, Integer endId);
 
+    Line selectByAll(String summary,Integer beginId, Integer endId);
+
     Line selectById(Integer id);
 
-    Boolean insert(List<Integer> allWarehouseId,Integer beginId,Integer endId);
+    Boolean insert(Line line);
 
     Boolean update(Line line);
 

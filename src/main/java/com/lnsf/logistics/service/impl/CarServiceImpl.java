@@ -67,13 +67,18 @@ public class CarServiceImpl implements CarService {
 
 
     @Override
+    public Car selectByUserId(Integer id) {
+        return carMapper.selectByUserId(id);
+    }
+
+    @Override
     public Car selectById(Integer id) {
         return carMapper.selectById(id);
     }
 
     @Override
     public String insert(Car car) {
-         if (car.getMaxWeight() == null) {
+        if (car.getMaxWeight() == null) {
             return "车辆最大重量不能为空！";
         } else if (carMapper.insert(car)) {
             return "插入成功";
@@ -83,24 +88,19 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public String update(Car car) {
-        if (carMapper.selectById(car.getCarId()) != null) {
-            if (!carMapper.selectById(car.getCarId()).getStatus().equals(GIFT.getCode())) {
-                if (userMapper.selectById(car.getUserId()) == null) {
-                    return "查无此人！";
-                } else if (carMapper.selectByUserId(car.getUserId()) != null && !carMapper.selectByUserId(car.getUserId()).getCarId().equals(car.getCarId())) {
-                    return "该司机已经分配车辆了！";
-                } else if (carMapper.selectById(car.getCarId()).getStatus().equals(IS_BUSY.getCode())) {
-                    return "请确保该车辆不在工作状态再进行更新！";
-                } else if (car.getMaxWeight() == null) {
-                    return "车辆最大重量不能为空！";
-                } else if (car.getResidueWeight() > car.getMaxWeight()) {
-                    return "车辆载量不能超过最大载量！";
-                } else if (carMapper.update(car)) {
-                    return "更新成功";
-                } else return "更新失败";
-            } else return "该车辆已经废弃！";
-        }
-        return "找不到该车辆！";
+//            if (!carMapper.selectById(car.getCarId()).getStatus().equals(GIFT.getCode())) {
+//            } else if (carMapper.selectById(car.getCarId()).getStatus().equals(IS_BUSY.getCode())) {
+//                return "请确保该车辆不在工作状态再进行更新！";
+//            } else if (car.getMaxWeight() == null) {
+//                return "车辆最大重量不能为空！";
+//            } else if (car.getResidueWeight() > car.getMaxWeight()) {
+//                return "车辆载量不能超过最大载量！";
+        //  } else
+        if (carMapper.update(car)) {
+            return "更新成功";
+        } else return "更新失败";
+//        } else return "该车辆已经废弃！";
+//        return "找不到该车辆！";
 
     }
 

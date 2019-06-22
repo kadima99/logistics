@@ -10,6 +10,7 @@ public class HandoverOrder {
     private Integer delMark;
     private Timestamp createDate;
     private Integer warehouseId;
+    private Integer flag;
 
 
     public Integer getHandoverOrderId() {
@@ -44,7 +45,6 @@ public class HandoverOrder {
         this.delMark = delMark;
     }
 
-
     public Integer getWarehouseId() {
         return warehouseId;
     }
@@ -61,23 +61,33 @@ public class HandoverOrder {
         this.createDate = createDate;
     }
 
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
     public HandoverOrder() {
     }
 
-    public HandoverOrder(Integer userId, Integer outboundId, Integer warehouseId,Integer delMark) {
+    public HandoverOrder(Integer userId, Integer outboundId, Integer warehouseId,Integer flag,Integer delMark) {
 
         this.userId = userId;
         this.outboundId = outboundId;
         this.warehouseId = warehouseId;
+        this.flag = flag;
         this.delMark = delMark;
 
     }
 
-    public HandoverOrder(Integer handoverOrderId,Integer userId, Integer outboundId,Integer warehouseId, Integer delMark) {
+    public HandoverOrder(Integer handoverOrderId,Integer userId, Integer outboundId,Integer warehouseId, Integer flag,Integer delMark) {
         this.handoverOrderId = handoverOrderId;
         this.userId = userId;
         this.outboundId = outboundId;
         this.warehouseId = warehouseId;
+        this.flag = flag;
         this.delMark = delMark;
 
     }
@@ -91,6 +101,7 @@ public class HandoverOrder {
                 ", delMark=" + delMark +
                 ", createDate=" + createDate +
                 ", warehouseId=" + warehouseId +
+                ", flag=" + flag +
                 '}';
     }
 }

@@ -70,7 +70,7 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
     }
 
     @Override//中心仓库之间
-    public Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds, Integer lineId) {
+    public Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds, Integer lineId,Integer level) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (userService.selectById(userId) == null) {
             map.put("result", "请检查员工不存在");
@@ -82,14 +82,20 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         Integer flag = 0;
         Integer handoverOrderId = 0;
         String lineSummary = lineService.selectById(lineId).getLineSummary();
-        String[] warehouseIds = lineSummary.split("-");
+        String [] warehouseIds = {};
+        if (level.equals(1)){
+            System.out.println(lineSummary.substring(2,lineSummary.length()));
+            warehouseIds = lineSummary.substring(2,lineSummary.length()).split("-");
+        }else warehouseIds = lineSummary.split("-");
+
         for (int i = 0; i < outboundIds.length; i++) {
             if (flag.equals(0)) {
-                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundIds[i], Integer.parseInt(warehouseIds[i]), 0))) {
+                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundIds[i], Integer.parseInt(warehouseIds[i]),1, 0))) {
                     flag++;
                 }
-                handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundIds[i - 1]).getHandoverOrderId();
-            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundIds[i], Integer.parseInt(warehouseIds[i]), 0))) {
+                handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundIds[i]).getHandoverOrderId();
+                System.out.println(handoverOrderId);
+            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundIds[i], Integer.parseInt(warehouseIds[i]), 1,0))) {
                 flag++;
             }
         }
@@ -112,13 +118,13 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         Integer flag = 0;
         Integer handoverOrderId = 0;
         for (Integer outboundId : outboundIds) {
-
             if (flag.equals(0)) {
-                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundId, warehouseId, 0))) {
+                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundId, warehouseId, 0,0))) {
                     flag++;
                 }
                 handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundId).getHandoverOrderId();
-            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundId, 0))) {
+                System.out.println(handoverOrderId);
+            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundId, warehouseId,0,0))) {
                 flag++;
             }
         }

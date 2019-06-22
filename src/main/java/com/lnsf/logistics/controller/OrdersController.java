@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lnsf.logistics.Enum.CarStatus.NO_BUSY;
 import static com.lnsf.logistics.Enum.OrdersStatus.*;
 
 @RestController
@@ -33,7 +34,22 @@ public class OrdersController {
     private OutboundOrderService outboundOrderService;
     @Autowired
     private InboundOrderService inboundOrderService;
+    @Autowired
+    private CarService carService;
+    @Autowired
+    private  LineService lineService;
 
+
+    @RequestMapping("/inbound")
+    public Map<String,Object> inbound(@RequestParam("orderId") List<Long> orderId,HttpServletRequest request) throws ParseException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if ( user != null) {
+            map = inboundOrderService.insert(orderId,user.getWarehouseId());
+        }
+        return map;
+    }
 
     @RequestMapping("/checkArea")
     public Boolean checkArea(String area, HttpServletRequest request) {
@@ -105,12 +121,40 @@ public class OrdersController {
         return map;
     }
 
+    @RequestMapping("/allOutboundConfirm1")
+    public Map<String, Object> allOutboundConfirm1(Integer handoverOrderId, HttpServletRequest request) throws ParseException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            Car car = carService.selectByUserId(user.getUserId());
+            Line line = lineService.selectById(car.getLineId());
+            System.out.println(car.getCarId());
+            car.setUserId(0);
+            car.setLineId(0);
+            car.setStatus(NO_BUSY.getCode());
+            carService.update(car);
+            line.setDelMark(1);
+            lineService.update(line);
+            map = ordersService.driverFinish(handoverOrderId);
+        }
+        return map;
+    }
+
     @RequestMapping("/allOutboundConfirm")
     public Map<String, Object> driverFinish(Integer handoverOrderId, HttpServletRequest request) throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
+            Car car = carService.selectByUserId(user.getUserId());
+            Line line = lineService.selectById(car.getLineId());
+            car.setUserId(0);
+            car.setLineId(0);
+            car.setStatus(NO_BUSY.getCode());
+            carService.update(car);
+            line.setDelMark(1);
+            lineService.update(line);
             map = ordersService.driverFinish(handoverOrderId);
         }
         return map;
@@ -134,26 +178,30 @@ public class OrdersController {
         User user = (User) session.getAttribute("user");
         List<Map<String, Object>> mapList = new ArrayList<Map<String, Object>>();
         if (user != null) {
+            Integer warehouseId = 0;
             List<HandoverOrder> handoverOrders = handoverOrderService.selectByUserIdAndStatus(null, user.getUserId(), 0);
             for (int i = 0; i < handoverOrders.size(); i++) {
                 Map<String, Object> handoverOrderMap = new HashMap<String, Object>();
                 handoverOrderMap.put("outboundOrderId", handoverOrders.get(i).getOutboundId());
                 handoverOrderMap.put("warehouseId", handoverOrders.get(i).getWarehouseId());
-                handoverOrderMap.put("createDate", handoverOrders.get(i).getCreateDate().toString());
-                handoverOrderMap.put("status", outboundOrderService.selectByOrderId(handoverOrders.get(i).getOutboundId()).get(0).getDelMark());
+                handoverOrderMap.put("createDate", handoverOrders.get(i).getCreateDate());
+                handoverOrderMap.put("status", outboundOrderService.selectById( handoverOrders.get(i).getOutboundId()).get(0).getDelMark());
                 List<OutboundOrder> outboundOrders = outboundOrderService.selectById(handoverOrders.get(i).getOutboundId());
-                Integer[] orderDetial = new Integer[outboundOrders.size()];
+                Integer[] orderDetail = new Integer[outboundOrders.size()];
                 for (int j = 0; j < outboundOrders.size(); j++) {
                     Integer orderId = outboundOrders.get(j).getOrderId();
-                    orderDetial[j] = orderId;
+                    orderDetail[j] = orderId;
                 }
-                handoverOrderMap.put("orderDetial", orderDetial);
+                handoverOrderMap.put("orderDetial", orderDetail);
                 mapList.add(handoverOrderMap);
             }
+
+            map.put("handoverOrderData", mapList);
             if (handoverOrders.size() > 0) {
+                map.put("handoverOrderStatus",handoverOrders.get(0).getFlag());
                 map.put("handoverOrderId", handoverOrders.get(0).getHandoverOrderId());
             }
-            map.put("handoverOrderData", mapList);
+
         }
         return map;
     }
@@ -182,7 +230,23 @@ public class OrdersController {
                 mapList.add(handoverOrderMap);
             }
             map.put("handoverOrderData", mapList);
-            map.put("totalPage", Math.ceil(handoverOrderService.countHandoverOrderIdByUserId(user.getUserId()).doubleValue() / 8.0));
+            if (handoverOrderIds.size() > 0){
+                map.put("totalPage", Math.ceil(handoverOrderService.countHandoverOrderIdByUserId(user.getUserId()).doubleValue() / 8.0));
+            }
+        }
+        return map;
+    }
+
+    @RequestMapping("/getAll")
+    public Map<String, Object> getAll(Integer keyword, Integer status, Integer page, HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Integer offset = (page - 1) * 8;
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            List<Orders> orders = ordersService.selectByWarehouseId(keyword, null, status, offset);
+            map.put("orderData", orders);
+            map.put("totalPage", Math.ceil(ordersService.countByWarehouseId(keyword, null, status).doubleValue() / 8.0));
         }
         return map;
     }
@@ -224,7 +288,6 @@ public class OrdersController {
             Orders order = ordersService.selectByOrdersId(orderId);
             order.setWareWeight(wareWeight);
             order.setFreight(freight);
-            order.setStatus(WAIT_FOR.getCode());
             if (ordersService.update(order).equals("更新成功")) {
                 map.put("result", true);
             } else map.put("result", ordersService.update(order));
@@ -257,7 +320,10 @@ public class OrdersController {
                 mapList.add(inboundOrderMap);
             }
             map.put("inboundOrderData", mapList);
-            map.put("totalPage", Math.ceil(inboundOrderService.countInboundOrderIdByWarehouseId(user.getWarehouseId()).doubleValue() / 8.0));
+            if (inboundOrderIds.size() > 0){
+                map.put("totalPage", Math.ceil(inboundOrderService.countInboundOrderIdByWarehouseId(user.getWarehouseId()).doubleValue() / 8.0));
+
+            }
         }
         return map;
     }

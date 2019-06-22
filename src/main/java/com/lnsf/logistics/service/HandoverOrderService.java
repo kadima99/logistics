@@ -19,7 +19,7 @@ public interface HandoverOrderService {
 
     Integer countHandoverOrderIdByUserId(Integer id);
 
-    Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds,Integer linId);
+    Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds,Integer linId,Integer level);
 
     Map<String, Object> outboundInsert(Integer userId, Integer[] outboundIds,Integer warehouseId);
 

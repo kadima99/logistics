@@ -50,12 +50,12 @@ public class LineController {
     @RequestMapping("/test")
     public Map<String,Object> test(Integer sid,Integer eid) {
 //        return lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,eid);
-//        return lineService.getRouteByCenterWarehouse(1);
-        Map <String,Object> eMap = new HashMap<>();
-        Map <String,Object> map = new HashMap<>();
-        eMap = lineService.getEndWarehouseId(sid);
-        map = lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,Integer.parseInt(eMap.get("endWarehouseId").toString()));
-        return map;
+        return lineService.getRouteByCenterWarehouse(sid);
+//        Map <String,Object> eMap = new HashMap<>();
+//        Map <String,Object> map = new HashMap<>();
+//        eMap = lineService.getEndWarehouseId(sid);
+//        map = lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,Integer.parseInt(eMap.get("endWarehouseId").toString()));
+//        return map;
     }
 
     public Boolean insert(Line line) {

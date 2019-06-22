@@ -1,5 +1,6 @@
 package com.lnsf.logistics.controller;
 
+import com.lnsf.logistics.entity.Locations;
 import com.lnsf.logistics.entity.User;
 import com.lnsf.logistics.entity.Warehouse;
 import com.lnsf.logistics.service.LocationsService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,21 @@ public class WarehouseController {
     private WarehouseService warehouseService;
     @Autowired
     private LocationsService locationsService;
+
+
+    @RequestMapping("/getNear")
+    public Map<String,Object> getNear(String address,HttpServletRequest request){
+        Map<String,Object> map = new HashMap<String, Object>();
+        HttpSession session = request.getSession();
+        List<Warehouse> warehouses = warehouseService.selectAll(null,address,null);
+        String[] strings = new String[warehouses.size()];
+        for (int i= 0;i<warehouses.size();i++){
+            System.out.println(warehouses.get(i).getAddress());
+            strings[i] = warehouses.get(i).getAddress();
+        }
+        map.put("warehouse",strings);
+        return map;
+    }
 
     @RequestMapping("/getAll")
     public Map<String, Object> getAll(Integer page, String keyword, String city, HttpServletRequest request) {

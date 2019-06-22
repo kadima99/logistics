@@ -1,6 +1,7 @@
 package com.lnsf.logistics.service.impl;
 
 import com.lnsf.logistics.entity.InboundOrder;
+import com.lnsf.logistics.entity.Orders;
 import com.lnsf.logistics.entity.OutboundOrder;
 import com.lnsf.logistics.mapper.OutboundOrderMapper;
 import com.lnsf.logistics.service.OutboundOrderService;
@@ -27,6 +28,16 @@ public class OutboundOrderServiceImpl implements OutboundOrderService {
     @Override
     public List<OutboundOrder> selectByOrderId(Integer id) {
         return outboundOrderMapper.selectByOrderId(id);
+    }
+
+    @Override
+    public Integer[] selectByNextWarehouseIdAndDelMark(Integer id,Integer delMark){
+        List<Integer> integers = outboundOrderMapper.selectByNextWarehouseIdAndDelMark(id, delMark);
+        Integer[] integer = new Integer[integers.size()];
+        for (int i =0;i<integers.size();i++){
+            integer[i] = integers.get(i);
+        }
+        return integer;
     }
 
     @Override
@@ -60,19 +71,19 @@ public class OutboundOrderServiceImpl implements OutboundOrderService {
     }
 
     @Override
-    public Boolean insert(List<Long> orders, Integer warehouseId, Integer nextWarehouseId) {
-
+    public Boolean insert(List<Orders> orders, Integer warehouseId, Integer nextWarehouseId) {
         Integer flag = 0;
         Integer outboundOrderId = 0;
-        for (Long orderId : orders) {
+        for (Orders order : orders) {
+            Integer orderId = order.getOrderId();
             if (flag.equals(0)){
-                if (outboundOrderMapper.insert(new OutboundOrder(warehouseId,nextWarehouseId,orderId.intValue(),0))){
+                if (outboundOrderMapper.insert(new OutboundOrder(warehouseId,nextWarehouseId,orderId,0))){
                     flag ++;
                 }
-                List<OutboundOrder> outboundOrders = outboundOrderMapper.selectByOrderId(orders.get(0).intValue());
+                List<OutboundOrder> outboundOrders = outboundOrderMapper.selectByOrderId(orders.get(0).getOrderId());
                 outboundOrderId = outboundOrders.get(outboundOrders.size()-1).getOutboundOrderId();
             }
-            else if (outboundOrderMapper.insert(new OutboundOrder(outboundOrderId,orderId.intValue(), warehouseId, 0))){
+            else if (outboundOrderMapper.insert(new OutboundOrder(outboundOrderId, warehouseId,nextWarehouseId,orderId, 0))){
                 flag++;
             }
         }

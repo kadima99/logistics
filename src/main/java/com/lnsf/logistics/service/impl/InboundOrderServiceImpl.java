@@ -71,13 +71,13 @@ public class InboundOrderServiceImpl implements InboundOrderService {
             ordersService.setEndWarehouse(order.getOrderId());
             ordersService.update(order);
             if (flag.equals(0)){
-                if (inboundOrderMapper.insert(new InboundOrder(orderId.intValue(),warehouseId,0))){
+                if (inboundOrderMapper.insert(new InboundOrder(orderId.intValue(),warehouseId,1))){
                     flag ++;
                 }
                 List<InboundOrder> inboundOrders = inboundOrderMapper.selectByOrderId(orderId.intValue());
                 inboundOrderId = inboundOrders.get(inboundOrders.size()-1).getInboundOrderId();
             }
-            else if (inboundOrderMapper.insert(new InboundOrder(inboundOrderId,orderId.intValue(), warehouseId, 0))){
+            else if (inboundOrderMapper.insert(new InboundOrder(inboundOrderId,orderId.intValue(), warehouseId, 1))){
                 flag++;
             }
         }

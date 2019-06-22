@@ -30,13 +30,13 @@ public interface InboundOrderMapper {
     @Select("SELECT inbound_order_id from inbound_order WHERE warehouse_id = #{id} group by inbound_order_id LIMIT #{offset},8")
     List<Integer> getInboundOrderIdByWarehouseId(Integer id,Integer offset);
 
-    @Select("SELECT count(inbound_order_id) from inbound_order WHERE warehouse_id = #{id} group by inbound_order_id ")
+    @Select("select count(inbound_order_id) from (SELECT inbound_order_id from inbound_order WHERE warehouse_id = #{id} group by inbound_order_id)b ")
     Integer countInboundOrderIdByWarehouseId(Integer id);
 
     @Insert("INSERT inbound_order VALUES(#{inboundOrderId},#{orderId},#{warehouseId},now(),#{delMark})")
     Boolean insert(InboundOrder inboundOrder);
 
-    @Update("UPDATE inbound_order set order_id = #{orderId},warehouse_id= #{warehouseId},del_mark = #{delMark},create_date = #{createDate} WHERE inbound_order_id = #{id}")
+    @Update("UPDATE inbound_order set warehouse_id= #{warehouseId},del_mark = #{delMark},create_date = #{createDate} WHERE order_id = #{orderId} AND inbound_order_id = #{id}")
     Boolean update(InboundOrder inboundOrder);
 
     @Update("UPDATE inbound_order set del_mark = 1 WHERE inbound_order_id = #{id}")

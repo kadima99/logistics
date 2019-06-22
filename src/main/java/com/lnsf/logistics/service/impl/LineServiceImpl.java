@@ -32,6 +32,7 @@ public class LineServiceImpl implements LineService {
 
     SnCal snCal = new SnCal();
 
+
     @Override
     public List<Line> selectAll() {
         return lineMapper.selectAll();
@@ -48,14 +49,19 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
+    public Line selectByAll(String summary, Integer beginId, Integer endId) {
+        return lineMapper.selectByAll(summary, beginId, endId);
+    }
+
+
+    @Override
     public Line selectById(Integer id) {
         return lineMapper.selectById(id);
     }
 
     @Override
-    public Boolean insert(List<Integer> allWarehouseId, Integer beginId, Integer endId) {
-        String lineSummary = allWarehouseId.toString();
-        return lineMapper.insert(new Line(lineSummary, beginId, endId, 0));
+    public Boolean insert(Line line) {
+        return lineMapper.insert(line);
     }
 
     @Override
@@ -124,7 +130,7 @@ public class LineServiceImpl implements LineService {
             while (two.hasNext()) {
                 Map.Entry<Integer, Character> entryTwo = two.next();
                 if (entryOne.getValue() != entryTwo.getValue() && entryOne.getValue() < entryTwo.getValue()) {
-                    eData[j] = new ListUDG.EData(entryOne.getValue(), entryTwo.getValue(), getDistanceByWareHouseId(entryOne.getKey(), entryTwo.getKey()));
+                    eData[j] = new ListUDG.EData(entryOne.getValue(), entryTwo.getValue(), getDistanceByWareHouseId(entryOne.getKey(), entryTwo.getKey()) / (orderMap.get(entryTwo.getKey()) * 100));
                     System.out.println(eData[j].getWeight());
                     j++;
                 } else
@@ -237,10 +243,10 @@ public class LineServiceImpl implements LineService {
             eData[v++] = new ListUDG.EData(t1.get(nearbyWarehouse.getWarehouseId()), t1.get(nearbyWarehouse.getNearbyWarehouseId()), distance / weight);
         }
         ListUDG PG = new ListUDG(vemx, eData);
-        PG.print();
-        PG.DFS();
+       // PG.print();
+       // PG.DFS();
         char[] bfs = PG.BFS();
-        PG.kruskal();
+       // PG.kruskal();
         char[] prim = PG.prim(0);
 
         String primRoute = "";
@@ -264,6 +270,7 @@ public class LineServiceImpl implements LineService {
         }
 
         map.put("primRoute", primRoute);
+
         Integer primSum = 0;
         for (int i = 0; i < primArr.length; i++) {
             List<Orders> orders = ordersService.selectByWarehouseIdAndEnd(primArr[i], endCenterWarehouseId);
