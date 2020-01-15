@@ -75,21 +75,33 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public Map<String, Object> getRouteByCenterWarehouse(Integer centerWarehouseId) {
+    public Map<String, Object> getRouteByCenterWarehouse(Integer centerWarehouseId,Integer status) {
         Map<String, Object> map = new HashMap<>();
         map.put("centerWareHouseId", centerWarehouseId);
         List<Warehouse> warehouseList = warehouseService.selectByArea(warehouseService.selectById(centerWarehouseId).getArea());
-        List<Orders> ordersList = ordersService.selectByStatusAndWarehouseId(centerWarehouseId, 0);
+        List<Orders> ordersList = ordersService.selectByStatusAndWarehouseId(centerWarehouseId, status);
         Map<Integer, Integer> orderMap = new HashMap<>();
-        for (int i = 0; i < ordersList.size(); i++) {
-
-            if (!orderMap.containsKey(ordersList.get(i).getWarehouseId())) {
-                orderMap.put(ordersList.get(i).getWarehouseId(), 1);
-            } else {
-                Integer num = orderMap.get(ordersList.get(i).getWarehouseId());
-                orderMap.put(ordersList.get(i).getWarehouseId(), ++num);
+        if(status == 0){
+            for (int i = 0; i < ordersList.size(); i++) {
+                if (!orderMap.containsKey(ordersList.get(i).getWarehouseId())) {
+                    orderMap.put(ordersList.get(i).getWarehouseId(), 1);
+                } else {
+                    Integer num = orderMap.get(ordersList.get(i).getWarehouseId());
+                    orderMap.put(ordersList.get(i).getWarehouseId(), ++num);
+                }
+            }
+        }else if(status == 3){
+            for (int i = 0; i < ordersList.size(); i++) {
+                if (!orderMap.containsKey(ordersList.get(i).getEndWarehouseId())) {
+                    orderMap.put(ordersList.get(i).getEndWarehouseId(), 1);
+                } else {
+                    Integer num = orderMap.get(ordersList.get(i).getEndWarehouseId());
+                    orderMap.put(ordersList.get(i).getEndWarehouseId(), ++num);
+                }
             }
         }
+
+
         map.put("orderList", ordersList);
         map.put("warehouseList", warehouseList);
         map.put("orderMap", orderMap);
@@ -99,7 +111,7 @@ public class LineServiceImpl implements LineService {
 
         //赋值给顶点数组
         Integer orderSize = orderMap.size() + 1;
-        System.out.println(orderSize);
+//        System.out.println(orderSize);
         char[] vemx = new char[orderSize];
         Integer i = 1;
 
@@ -170,6 +182,8 @@ public class LineServiceImpl implements LineService {
 //        PG.floyd(path, floy);
         return map;
     }
+
+
 
 
     @Override
@@ -355,9 +369,7 @@ public class LineServiceImpl implements LineService {
                     max = Integer.parseInt(primSum);
                     maxId = entryOne.getKey();
                 }
-
             }
-
         }
         map.put("endWarehouseId", maxId);
         map.put("routeMap", routeMap);

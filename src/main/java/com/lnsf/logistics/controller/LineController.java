@@ -50,7 +50,7 @@ public class LineController {
     @RequestMapping("/test")
     public Map<String,Object> test(Integer sid,Integer eid) {
 //        return lineService.getRouteByCenterWarehouseToCenterWarehouse(sid,eid);
-        return lineService.getRouteByCenterWarehouse(sid);
+        return lineService.getRouteByCenterWarehouse(sid,3);
 //        Map <String,Object> eMap = new HashMap<>();
 //        Map <String,Object> map = new HashMap<>();
 //        eMap = lineService.getEndWarehouseId(sid);

@@ -9,13 +9,13 @@ import com.lnsf.logistics.service.HandoverOrderService;
 import com.lnsf.logistics.service.LineService;
 import com.lnsf.logistics.service.OutboundOrderService;
 import com.lnsf.logistics.service.UserService;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import static com.lnsf.logistics.Enum.UserPriority.DRIVER;
 import static com.lnsf.logistics.Enum.UserStatus.IS_BUSY;
@@ -69,8 +69,9 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         return handoverOrderMapper.countHandoverOrderIdByUserId(id);
     }
 
-    @Override//中心仓库之间
-    public Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds, Integer lineId,Integer level) {
+    @Override//区域之间送件装车
+    public Map<String, Object> inboundInsert(Integer userId, Integer[] outboundIds, Integer lineId) {
+        System.out.println("inbound");
         Map<String, Object> map = new HashMap<String, Object>();
         if (userService.selectById(userId) == null) {
             map.put("result", "请检查员工不存在");
@@ -82,20 +83,17 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         Integer flag = 0;
         Integer handoverOrderId = 0;
         String lineSummary = lineService.selectById(lineId).getLineSummary();
-        String [] warehouseIds = {};
-        if (level.equals(1)){
-            System.out.println(lineSummary.substring(2,lineSummary.length()));
-            warehouseIds = lineSummary.substring(2,lineSummary.length()).split("-");
-        }else warehouseIds = lineSummary.split("-");
+        String[] warehouseIds = lineSummary.split("-");
 
+        selectByOutboundId(outboundIds.length);
         for (int i = 0; i < outboundIds.length; i++) {
+            Integer warehouseId = outboundOrderService.selectById(outboundIds[i]).get(0).getNextWarehouseId();
             if (flag.equals(0)) {
-                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundIds[i], Integer.parseInt(warehouseIds[i]),1, 0))) {
+                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundIds[i], warehouseId,0, 0))) {
                     flag++;
                 }
                 handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundIds[i]).getHandoverOrderId();
-                System.out.println(handoverOrderId);
-            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundIds[i], Integer.parseInt(warehouseIds[i]), 1,0))) {
+            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundIds[i], warehouseId, 0,0))) {
                 flag++;
             }
         }
@@ -105,8 +103,42 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         return map;
     }
 
-    @Override//区域内insert
+    @Override//中心仓库之间送件装车
+    public Map<String, Object> centerInboundInsert(Integer userId, Integer[] outboundIds, Integer lineId) {
+        System.out.println("inbound");
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (userService.selectById(userId) == null) {
+            map.put("result", "请检查员工不存在");
+        } else if (!userService.selectById(userId).getPriority().equals(2)) {
+            map.put("result", "请选择正确的司机");
+        } else if (!userService.selectById(userId).getStatus().equals(1)) {
+            map.put("result", "请确保司机处于空闲状态");
+        }
+        Integer flag = 0;
+        Integer handoverOrderId = 0;
+        String lineSummary = lineService.selectById(lineId).getLineSummary();
+        String[] warehouseIds = lineSummary.split("-");
+
+        for (int i = 0; i < outboundIds.length; i++) {
+            Integer warehouseId = Integer.parseInt(warehouseIds[warehouseIds.length-1]);
+            if (flag.equals(0)) {
+                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundIds[i], warehouseId,0, 0))) {
+                    flag++;
+                }
+                handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundIds[i]).getHandoverOrderId();
+            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundIds[i], warehouseId, 0,0))) {
+                flag++;
+            }
+        }
+        if (flag.equals(outboundIds.length)) {
+            map.put("result", true);
+        } else map.put("result", "插入失败");
+        return map;
+    }
+
+    @Override//区域内揽件
     public Map<String, Object> outboundInsert(Integer userId, Integer[] outboundIds, Integer warehouseId) {
+        System.out.println("outbound");
         Map<String, Object> map = new HashMap<String, Object>();
         if (userService.selectById(userId) == null) {
             map.put("result", "请检查员工不存在");
@@ -119,12 +151,11 @@ public class HandoverOrderServiceImpl implements HandoverOrderService {
         Integer handoverOrderId = 0;
         for (Integer outboundId : outboundIds) {
             if (flag.equals(0)) {
-                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundId, warehouseId, 0,0))) {
+                if (handoverOrderMapper.insert(new HandoverOrder(userId, outboundId, warehouseId, 1,0))) {
                     flag++;
                 }
                 handoverOrderId = handoverOrderMapper.selectByOutboundId(outboundId).getHandoverOrderId();
-                System.out.println(handoverOrderId);
-            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundId, warehouseId,0,0))) {
+            } else if (handoverOrderMapper.insert(new HandoverOrder(handoverOrderId, userId, outboundId, warehouseId,1,0))) {
                 flag++;
             }
         }

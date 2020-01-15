@@ -36,6 +36,8 @@ public interface OrdersService {
 
     List<Orders> selectByStatusAndWarehouseId(Integer warehouseId, Integer status);
 
+    List<Orders> selectByStatusAndEndWarehouseId(Integer warehouseId, Integer status);
+
     List<Orders> selectByUserIdAndOrderStatus(Integer keyword, Integer id, Integer status, Integer offset);
 
     Integer countByUserIdAndOrderStatus(Integer keyword, Integer id, Integer status);

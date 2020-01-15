@@ -95,7 +95,9 @@ public class OutboundOrderServiceImpl implements OutboundOrderService {
 
     @Override
     public Boolean update(OutboundOrder outboundOrder) {
+        System.out.println(outboundOrder.toString());
         if (outboundOrderMapper.update(outboundOrder)){
+            System.out.println(outboundOrder.toString());
             return true;
         }else return false;
     }

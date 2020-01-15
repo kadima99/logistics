@@ -25,7 +25,7 @@ public interface LineService {
 
     Boolean delete(Integer id);
 
-    Map<String,Object> getRouteByCenterWarehouse(Integer centerWarehouseId);
+    Map<String,Object> getRouteByCenterWarehouse(Integer centerWarehouseId,Integer status);
 
     Map<String,Object> getRouteByCenterWarehouseToCenterWarehouse(Integer startCenterWarehouseId,Integer endCenterWarehouseId);
 

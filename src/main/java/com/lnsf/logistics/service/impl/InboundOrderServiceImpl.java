@@ -68,6 +68,7 @@ public class InboundOrderServiceImpl implements InboundOrderService {
         for (Long orderId : orders) {
             Orders order = ordersService.selectByOrdersId(orderId.intValue());
             order.setStatus(0);
+            System.out.println(order.getOrderId());
             ordersService.setEndWarehouse(order.getOrderId());
             ordersService.update(order);
             if (flag.equals(0)){

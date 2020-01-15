@@ -25,7 +25,7 @@ public interface HandoverOrderMapper {
     @Select("select handover_order_id from handover_order where user_id=#{id} AND del_mark = 1 group by handover_order_id limit #{offset},8")
     List<Integer> getHandoverOrderIdByUserId(Integer id,Integer offset);
 
-    @Select("select count(handover_order_id) from handover_order where user_id=#{id} AND del_mark = 1 group by handover_order_id ")
+    @Select("select count(handover_order_id) from handover_order where user_id=#{id} AND del_mark = 1 ")
     Integer countHandoverOrderIdByUserId(Integer id);
 
     @Insert("INSERT handover_order VALUES(#{handoverOrderId},#{userId},#{outboundId},now(),#{warehouseId},#{flag},0)")

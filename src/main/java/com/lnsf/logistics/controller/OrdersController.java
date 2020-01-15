@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.lnsf.logistics.Enum.CarStatus.IS_BUSY;
 import static com.lnsf.logistics.Enum.CarStatus.NO_BUSY;
 import static com.lnsf.logistics.Enum.OrdersStatus.*;
 
@@ -26,6 +27,8 @@ public class OrdersController {
 
     @Autowired
     private OrdersService ordersService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private LocationsService locationsService;
     @Autowired
@@ -341,7 +344,7 @@ public class OrdersController {
             for (int i = 0; i < outboundOrderIds.size(); i++) {
                 List<OutboundOrder> outboundOrders = outboundOrderService.selectById(outboundOrderIds.get(i));
                 Map<String, Object> outboundOrderMap = new HashMap<String, Object>();
-                outboundOrderMap.put("inboundOrderId", outboundOrderIds.get(i));
+                outboundOrderMap.put("outboundOrderId", outboundOrderIds.get(i));
                 outboundOrderMap.put("createDate", outboundOrders.get(0).getCreateDate());
                 outboundOrderMap.put("status", outboundOrders.get(0).getDelMark());
                 Integer[] orderDetail = new Integer[outboundOrders.size()];
@@ -352,7 +355,7 @@ public class OrdersController {
                 outboundOrderMap.put("orderDetial", orderDetail);
                 mapList.add(outboundOrderMap);
             }
-            map.put("inboundOrderData", mapList);
+            map.put("outboundOrderData", mapList);
             map.put("totalPage", Math.ceil(outboundOrderService.countOutboundOrderIdByWarehouseId(user.getWarehouseId()).doubleValue() / 8.0));
         }
         return map;
@@ -377,15 +380,21 @@ public class OrdersController {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
+            List<Orders> orders = new ArrayList<Orders>();
+
             int flag = 0;
             for (int i = 0; i < orderId.size(); i++) {
                 Orders order = ordersService.selectByOrdersId(orderId.get(i).intValue());
                 order.setUserId(userId);
-                order.setStatus(1);
+                User orderUser = userService.selectById(userId);
+                orderUser.setStatus(IS_BUSY.getCode());
+                order.setStatus(IS_DELIVERING.getCode());
                 if (ordersService.update(order).equals("更新成功")) {
                     flag++;
                 }
+                orders.add(order);
             }
+            outboundOrderService.insert(orders,user.getWarehouseId(),user.getWarehouseId());
             if (flag == orderId.size()){
                 map.put("result",true);
             }else map.put("result","分配失败");

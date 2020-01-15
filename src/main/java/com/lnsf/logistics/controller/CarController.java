@@ -135,7 +135,7 @@ public class CarController {
         return map;
     }
 
-    @RequestMapping("/packageShipment")//需要封装方法
+    @RequestMapping("/packageShipment")//送件装车
     public Map<String, Object> packageShipment(Integer carId, Integer userId, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<String, Object>();
         HttpSession session = request.getSession();
@@ -146,7 +146,7 @@ public class CarController {
             car.setStatus(IS_BUSY.getCode());
             Integer level = car.getLevel();
             if (level.equals(LEVEL_1.getCode())) {
-                Map<String, Object> inMap = lineService.getRouteByCenterWarehouse(user.getWarehouseId());
+                Map<String, Object> inMap = lineService.getRouteByCenterWarehouse(user.getWarehouseId(), 3);
                 String lineSummary = (String) inMap.get("route");
                 String[] routes = lineSummary.split("-");
                 Line line = new Line(lineSummary, Integer.parseInt(routes[0]), Integer.parseInt(routes[0]), 0);
@@ -154,17 +154,26 @@ public class CarController {
                     Line line1 = lineService.selectByAll(lineSummary, Integer.parseInt(routes[0]), Integer.parseInt(routes[0]));
                     car.setLineId(line1.getLineId());
                 }
-                for (String route : routes) {//多个仓库
-                    Integer warehouse_id = Integer.parseInt(route);
+
+                //一个仓库对应一个出库单
+                Integer[] outboundOrderIds = new Integer[routes.length-1];
+                for (int  i = 1; i < routes.length; i++) {//多个仓库
+                    Integer warehouse_id = Integer.parseInt(routes[i]);
                     if (!warehouse_id.equals(Integer.parseInt(routes[0]))) {
-                        List<Orders> orders = ordersService.selectByWarehouseId(null, warehouse_id, 0, null);
+                        List<Orders> orders = ordersService.selectByStatusAndEndWarehouseId(warehouse_id, 3);
                         //生成这个仓库的出库单
-                        outboundOrderService.insert(orders, warehouse_id, Integer.parseInt(routes[0]));
+                        outboundOrderService.insert(orders, Integer.parseInt(routes[0]), warehouse_id);
+                        //所有出库单号
+                        Integer[] add = outboundOrderService.selectByNextWarehouseIdAndDelMark(warehouse_id, 0);
+                        //拼接,因为一个仓库对应一个出库单，所以despos为i-1位
+                        System.arraycopy(add, 0, outboundOrderIds, i-1, add.length);
                     }
                 }
-                //所有出库单号
-                Integer[] outboundOrderIds = outboundOrderService.selectByNextWarehouseIdAndDelMark(Integer.parseInt(routes[0]), 0);
-                handoverOrderService.inboundInsert(userId, outboundOrderIds, car.getLineId(), 1);
+                for (int j =0;j<outboundOrderIds.length;j++){
+                    System.out.println("长度"+outboundOrderIds.length);
+                    System.out.println("仓库"+outboundOrderIds[j]);
+                }
+                handoverOrderService.inboundInsert(userId, outboundOrderIds, car.getLineId());
                 //car.setLineId(lineService.select);
             }
             if (level.equals(LEVEL_2.getCode())) {
@@ -182,10 +191,10 @@ public class CarController {
                     Integer warehouse_id = Integer.parseInt(route);
                     List<Orders> orders = ordersService.selectByWarehouseId(null, warehouse_id, 0, null);
                     //生成这个仓库的出库单
-                    outboundOrderService.insert(orders, warehouse_id, Integer.parseInt(routes[routes.length-1]));
+                    outboundOrderService.insert(orders, warehouse_id, Integer.parseInt(routes[routes.length - 1]));
                 }
-                Integer[] outboundOrderIds = outboundOrderService.selectByNextWarehouseIdAndDelMark(Integer.parseInt(routes[routes.length-1]), 0);
-                handoverOrderService.inboundInsert(userId, outboundOrderIds, car.getLineId(), 2);
+                Integer[] outboundOrderIds = outboundOrderService.selectByNextWarehouseIdAndDelMark(Integer.parseInt(routes[routes.length - 1]), 0);
+                handoverOrderService.centerInboundInsert(userId, outboundOrderIds, car.getLineId());
             }
             if (carService.update(car).equals("更新成功")) {
                 map.put("result", true);
@@ -194,7 +203,7 @@ public class CarController {
         return map;
     }
 
-    @RequestMapping("/deliverShipment")
+    @RequestMapping("/deliverShipment")//揽件装车
     public Map<String, Object> deliverShipment(Integer carId, Integer userId, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<String, Object>();
         HttpSession session = request.getSession();
@@ -203,16 +212,16 @@ public class CarController {
             Car car = carService.selectById(carId);
             car.setUserId(userId);
             car.setStatus(IS_BUSY.getCode());
-            Map<String, Object> outMap = lineService.getRouteByCenterWarehouse(user.getWarehouseId());
+            Map<String, Object> outMap = lineService.getRouteByCenterWarehouse(user.getWarehouseId(), 0);
             String lineSummary = (String) outMap.get("route");
-            String[] routes = lineSummary.substring(2, lineSummary.length()).split("-");
+            String[] routes = lineSummary.split("-");
             Line line = new Line(lineSummary, Integer.parseInt(routes[0]), Integer.parseInt(routes[0]), 0);
             if (lineService.insert(line)) {
                 Line line1 = lineService.selectByAll(lineSummary, Integer.parseInt(routes[0]), Integer.parseInt(routes[0]));
                 car.setLineId(line1.getLineId());
             }
-            for (String route : routes) {//多个仓库
-                Integer warehouse_id = Integer.parseInt(route);
+            for (int i = 1; i < routes.length; i++) {//多个仓库
+                Integer warehouse_id = Integer.parseInt(routes[i]);
                 List<Orders> orders = ordersService.selectByWarehouseId(null, warehouse_id, 0, null);
                 //生成这个仓库的出库单
                 outboundOrderService.insert(orders, warehouse_id, Integer.parseInt(routes[0]));

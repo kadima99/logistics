@@ -51,8 +51,14 @@ public interface OrdersMapper {
     @Select("${_parameter}")
     List<Orders> getDelivery(String sql);
 
+    @Select("SELECT * FROM orders WHERE end_warehouse_id = #{id} AND status = 3")
+    List<Orders> selectByEndWarehouseIdAndStatus(Integer id);
+
     @Select("${_parameter}")
     Integer countByGetDelivery(String sql);
+
+    @Update("update orders set confirm_date = now() where order_id = #{id}")
+    Boolean updateTime(Integer id);
 
     @Insert("INSERT INTO orders VALUES(#{orderId},#{customerId},#{customerName},#{customerPhone},#{customerProvince},#{customerCity},#{customerAddress},#{receiverName},#{receiverPhone},#{receiverProvince},#{receiverCity},#{receiverAddress},#{wareWeight},#{freight},now(),#{confirmDate},#{status},#{warehouseId},#{endWarehouseId},#{userId})")
     Boolean insert(Orders orders);

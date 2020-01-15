@@ -119,7 +119,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Integer countByWarehouseId(Integer keyword, Integer id, Integer status) {
         String sql = "SELECT count(order_id) FROM orders where 1 = 1";
-        if (id != null){
+        if (id != null) {
             sql += " AND warehouse_id = " + id;
         }
         if (keyword != null) {
@@ -135,14 +135,13 @@ public class OrdersServiceImpl implements OrdersService {
     public List<Orders> selectByCustomerId(Integer id, Integer status, Integer offset) {
         String sql = "SELECT * FROM orders where customer_id = " + id + " ";
         if (status != null) {
-            if (status.equals(0)) sql += " status = 2";
-            if (status.equals(1)) sql += "(status = 3 OR status = 1 OR status = 0 OR status = 4)";
+            if (status.equals(0)) sql += "and status = 2";
+            if (status.equals(1)) sql += "and (status = 3 OR status = 1 OR status = 0 OR status = 4)";
         }
         sql += " ORDER BY create_date";
         if (offset != null) {
             sql += " LIMIT " + offset + ",8";
         }
-
         return ordersMapper.selectByCustomerId(sql);
     }
 
@@ -150,8 +149,10 @@ public class OrdersServiceImpl implements OrdersService {
     public Integer countByCustomerId(Integer id, Integer status) {
         String sql = "SELECT count(order_id) FROM orders where customer_id = " + id + " ";
         if (status != null) {
-            sql += " status = " + status;
+            if (status.equals(0)) sql += "and status = 2";
+            if (status.equals(1)) sql += "and (status = 3 OR status = 1 OR status = 0 OR status = 4)";
         }
+
         sql += " ORDER BY create_date";
         return ordersMapper.countByCustomerId(sql);
     }
@@ -184,17 +185,18 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override//终点区域仓库所有待配送的订单
-    public List<Orders> getDelivery(Integer keyword,Integer warehouseId){
-        String sql = "SELECT * FROM orders WHERE warehouse_id = "+ warehouseId +" AND end_warehouse_id = "+warehouseId +" AND status = 0 ";
-        if (keyword != null){
+    public List<Orders> getDelivery(Integer keyword, Integer warehouseId) {
+        String sql = "SELECT * FROM orders WHERE warehouse_id = " + warehouseId + " AND end_warehouse_id = " + warehouseId + " AND status = 3 ";
+        if (keyword != null) {
             sql += " AND order_id = " + keyword + " ";
         }
         return ordersMapper.getDelivery(sql);
     }
 
-    public Integer countByGetDelivery(Integer keyword,Integer warehouseId){
-        String sql = "SELECT count(order_id) FROM orders WHERE warehouse_id = "+ warehouseId +" AND end_warehouse_id = "+warehouseId +" AND status = 0 ";
-        if (keyword != null){
+
+    public Integer countByGetDelivery(Integer keyword, Integer warehouseId) {
+        String sql = "SELECT count(order_id) FROM orders WHERE warehouse_id = " + warehouseId + " AND end_warehouse_id = " + warehouseId + " AND status = 0 ";
+        if (keyword != null) {
             sql += " AND order_id = " + keyword + " ";
         }
         return ordersMapper.countByGetDelivery(sql);
@@ -221,7 +223,7 @@ public class OrdersServiceImpl implements OrdersService {
         return orders;
     }
 
-    @Override//这个中心仓库下属所有仓库的订单
+    @Override//这个中心仓库下属所有仓库的待收件订单
     public List<Orders> selectByStatusAndWarehouseId(Integer warehouseId, Integer status) {
         Integer area = warehouseService.selectById(warehouseId).getArea();
         List<Locations> locations = locationsService.selectByParentId(area);
@@ -233,7 +235,9 @@ public class OrdersServiceImpl implements OrdersService {
                 countyWarehouseId = warehouseService.selectByAreaAndLevel(locations.get(i).getId(), 1).getWarehouseId();
             }
             if (countyWarehouseId != null) {
-                order = selectByWarehouseId(null, countyWarehouseId, status, null);
+                if (status.equals(WAIT_FRO_TO_THEEND.getCode())) {
+                    order = ordersMapper.selectByEndWarehouseIdAndStatus(countyWarehouseId);
+                } else order = selectByWarehouseId(null, countyWarehouseId, status, null);
             }
             if (order != null) {
                 if (orders != null) {
@@ -242,6 +246,11 @@ public class OrdersServiceImpl implements OrdersService {
             }
         }
         return orders;
+    }
+
+    @Override//这个中心仓库下属所有仓库的待发件订单
+    public List<Orders> selectByStatusAndEndWarehouseId(Integer warehouseId, Integer status) {
+        return ordersMapper.selectByEndWarehouseIdAndStatus(warehouseId);
     }
 
     @Override
@@ -275,12 +284,14 @@ public class OrdersServiceImpl implements OrdersService {
     public Map<String, Object> finish(Integer orderId) {
         Map<String, Object> map = new HashMap<String, Object>();
         OutboundOrder outboundOrder = outboundOrderService.selectByOrderIdAnd(orderId, 0);
+        System.out.println("orderimpl"+outboundOrder.toString());
         outboundOrder.setDelMark(1);
         if (!outboundOrderService.update(outboundOrder)) {
             map.put("result", "出库表更新失败！");
         } else {
             Orders orders = selectByOrdersId(orderId);
             orders.setStatus(WAS_FINISHED.getCode());
+            ordersMapper.updateTime(orders.getOrderId());
             if (ordersMapper.update(orders)) {
                 map.put("result", true);
             } else map.put("result", "订单状态更新失败");
@@ -316,8 +327,6 @@ public class OrdersServiceImpl implements OrdersService {
             }
         }
         Integer warehouseId = handoverOrderService.selectByHandoverOrderId(handoverOrderId).get(0).getWarehouseId();
-        System.out.println(warehouseId);
-        System.out.println(orders.toString());
         inboundOrderService.insert(orders, warehouseId);
         if (flag == orders.size()) {
             map.put("result", true);
@@ -384,19 +393,17 @@ public class OrdersServiceImpl implements OrdersService {
         Map<String, Object> cusMap = locationsService.selectLocationsByAddress(orders.getCustomerAddress());
         Locations customerLocation = (Locations) cusMap.get("county");
         Integer customerArea = customerLocation.getId();
-        System.out.println(customerArea);
         //这里为开始的区域仓库到中心仓库
         if (warehouseService.selectByAreaAndLevel(customerArea, 1).getWarehouseId().equals(orders.getWarehouseId())) {
             Integer centerAre = customerLocation.getParentId();
             Integer centerWarehouseId = warehouseService.selectByAreaAndLevel(centerAre, 2).getWarehouseId();
             orders.setEndWarehouseId(centerWarehouseId);
         } else if (warehouseService.selectByAreaAndLevel(area, 2) != null) {//到终点的中心仓库的判断
-            //终点中心仓库到区域仓库
-            if (!warehouseService.selectByAreaAndLevel(area, 2).getWarehouseId().equals(orders.getWarehouseId())) {
-                if (!orders.getWarehouseId().equals(orders.getEndWarehouseId())) {
-                    orders.setEndWarehouseId(warehouseService.selectByAreaAndLevel(area, 2).getWarehouseId());//中心仓库之间
-                }
-            } else {
+            customerLocation = (Locations) cusMap.get("city");
+            customerArea = customerLocation.getId();
+            if (warehouseService.selectByAreaAndLevel(customerArea, 2).getWarehouseId().equals(orders.getWarehouseId())) {
+                orders.setEndWarehouseId(warehouseService.selectByAreaAndLevel(area, 2).getWarehouseId());//中心仓库之间
+            } else {//终点中心仓库到区域仓库
                 Locations locations = (Locations) map.get("county");
                 area = locations.getId();
                 Warehouse warehouse = warehouseService.selectByAreaAndLevel(area, 1);
@@ -405,7 +412,7 @@ public class OrdersServiceImpl implements OrdersService {
                     orders.setStatus(WAIT_FRO_TO_THEEND.getCode());
                 }
             }
-        } else return false;
+        } else orders.setStatus(WAS_FINISHED.getCode());
         if (ordersMapper.update(orders)) {
             return true;
         } else return false;
@@ -436,7 +443,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public String update(Orders orders) {
-         if (ordersMapper.update(orders)) {
+        if (ordersMapper.update(orders)) {
             return "更新成功";
         } else return "更新失败";
     }
