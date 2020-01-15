@@ -84,6 +84,7 @@ public class OrdersController {
         HttpSession session = request.getSession();
         if (session.getAttribute("customer") != null) {
             map = ordersService.getDetails(billId);
+            System.out.println(map);
         }
         return map;
     }
